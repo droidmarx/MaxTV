@@ -60,39 +60,11 @@ const loginBtn = document.querySelector("#login-btn");
 
 const users = [
   { username: "Gui", password: "Marx", nome: "Guilherme Marques"},
-  { username: "Andre", password: "123", nome: "André Levi" },
-  { username: "Sergio", password: "123", nome: "Sérgio Malandro" },
-  { username: "Elvis", password: "123", nome: "Elvis Presley" },
-  { username: "Robson", password: "123", nome: "Batman e Robson" },
-
+  { username: "Tayna", password: "060623", nome: "Tayná" },
 
   // adicionar mais usuários
 ];
 
-// Variáveis para armazenar os produtos e retiradas, utilizando o armazenamento local (localStorage)
-let produtos = JSON.parse(localStorage.getItem("produtos")) || [
-  { nome: "DROP", quantidade: 1000 },
-  { nome: "SC-APC", quantidade: 20 },
-  { nome: "SC-UPC", quantidade: 20 },
-  { nome: "Esticadores", quantidade: 100 },
-  { nome: "Roldana", quantidade: 100 },
-  { nome: "Fecho", quantidade: 50 },
-  { nome: "Anel", quantidade: 50 },
-  { nome: "Fita aço", quantidade: 50 },
-  { nome: "Fixa fio", quantidade: 100 },
-  { nome: "Isolante", quantidade: 100 },
-
-  { nome: "Cabo de rede", quantidade: 300 },
-  { nome: "Conc RJ45", quantidade: 20 },
-  { nome: "Kit-Fusao", quantidade: 10 },
-];
-
-const userProducts = {};
-
-// Associando produtos a cada usuário
-users.forEach(user => {
-  userProducts[user.username] = produtos;
-});
 
 
 // Função para criar uma chave única com base no nome de usuário
