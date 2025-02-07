@@ -1,0 +1,129 @@
+ * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+
+body {
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  min-width: 300px;
+  margin: 5rem auto;
+  padding: 20px;
+  background-color: #FFFFFF83;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
+  animation: 0.5s ease;
+  animation-name: slideout;
+  align-items: center;
+}
+
+h2 {
+  text-decoration: none;
+  text-align: center;
+  margin:1rem;
+  animation: 0.7s ease;
+  animation-name: slideout;
+}
+
+@keyframes slideout {
+  1% {
+    scale: 9;
+  }
+
+  100% {
+    scale: 1;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin: 5px;
+  font-weight: bold;
+}
+
+.container{
+  width: 100%
+}
+
+input[type="text"],
+input[type="password"] {
+  background: #FFF;
+  color: #000;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #000000;
+  margin-bottom: 10px;
+  text-align: center;
+  outline: transparent;
+}
+
+
+
+input[type="text"].blinking,
+input[type="password"].blinking {
+  animation: blink 2s linear infinite;
+  caret-color: grey;
+  color:transparent;
+}
+
+
+
+@keyframes blink {
+  0% {
+    border-color: #FFFFFF;
+  }
+  50% {
+    border-color: #0077CC;
+    color: #0077CC;
+  }
+  100% {
+    border-color: #FFFFFF;
+  }
+}
+
+
+button[type="submit"] {
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  background-color: #0077cc;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+[type="submit"]:hover {
+  background-color: #42445A;
+}
+
+.blur {
+  filter: blur(10px);
+  transition: filter 0.6s ease-in-out;
+  animation-duration: 3s;
+  animation-name: slidein;
+}
+
+@keyframes slidein {
+  1% {
+    scale: 1;
+    filter: blur(2px);
+  }
+
+  100% {
+    scale: 50;
+    filter: blur(10px);
+  }
+}

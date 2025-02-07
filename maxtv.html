@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Clientes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciador de Clientes</h1>
+        <button id="theme-toggle">🌙</button>
+
+        <div class="filters">
+            <input type="text" id="search" placeholder="Buscar">
+        </div>
+
+        <button onclick="openModal()">Adicionar Cliente</button><br><br>
+        
+        <select onchange="sortClients(this.value)">
+	<option value="">Ordenar por</option>
+	<option value="nameAsc">Nome (A-Z)</option>
+	<option value="nameDesc">Nome (Z-A)</option>
+	<option selected value="dateAsc">Vencimento (Mais Próximo)</option>
+	<option value="dateDesc">Vencimento (Mais Distante)</option>
+        </select>
+        
+<div class="table-wrapper">
+	<table>
+		<thead>
+			<tr>
+				<th>Cliente</th>
+				<th>Vencimento</th>
+				<th>Tela</th>
+				<th>Desconto (%)</th>
+				<th>Valor (R$)</th>
+				<th>WhatsApp</th>
+				<th>Painel</th>
+				<th>MAC</th>
+				<th>Observações</th>
+				<th>Ações</th>
+			</tr>
+		</thead>
+		<tbody id="clientTable"></tbody>
+	</table>
+</div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2  id="modalTitle">Adicionar Cliente</h2>
+            <form id="clientForm">
+                <input type="text" id="cliente" placeholder="Nome do Cliente" required>
+                <input type="date" id="vencimento" required>
+                <input type="text" id="tela" placeholder="Tela">
+                <input type="number" id="desconto" placeholder="Desconto (%)" min="0" max="100">
+                <input type="number" id="valor" placeholder="Valor (R$)" step="0.01" required>
+                <input type="tel" id="whats" placeholder="WhatsApp (DDD + Número)">
+                <label for="painel"></label>
+<select id="painel" required>
+    <option value="">Selecione um painel</option>
+    <option value="ACSB">ACSB TV</option>
+    <option value="CORE TV">CORE TV</option>
+    <option value="SLIM TV">SLIM TV</option>
+    <option value="MK21 TV">MK21 TV</option>
+</select>
+                <input type="text" id="mac" placeholder="MAC">
+                <textarea id="observacoes" placeholder="Observações"></textarea>
+                <button type="submit">Salvar Cliente</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

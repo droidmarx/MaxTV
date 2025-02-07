@@ -1,0 +1,297 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #1a1a1a;
+    color: #000000;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    background: #2a2a2a;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.filters, .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.filters input, select {
+    flex: 1;
+    padding: 10px;
+    background: #333;
+    border: 1px solid #555;
+    color: white;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #555555;
+    color: white;
+    font-size: 16px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #777;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #444;
+    text-align: center;
+    color: white;
+}
+
+th {
+    background-color: #444;
+    color: white;
+}
+
+td button {
+    background-color: #474444;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+td button:hover {
+    background-color: #c9302c;
+}
+
+select{
+	width: 100%,
+}
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #2a2a2a;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+}
+
+.modal-content input, .modal-content textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    background: #333;
+    border: 1px solid #555;
+    color: white;
+    border-radius: 5px;
+}
+
+.close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #d9534f;
+}
+
+.expiring {
+    background-color: yellow !important;
+    font-weight: bold;
+}
+
+
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .filters {
+        flex-direction: column;
+    }
+    
+    .modal-content {
+        width: 95%;
+    }
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto; /* Permite rolagem horizontal se necessário */
+}
+
+table {
+    width: 100%;
+    min-width: 800px; /* Define um tamanho mínimo para evitar que as colunas fiquem muito apertadas */
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #444444;
+    color: white;
+    font-size: 20px;
+    padding: 10px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#theme-toggle:hover {
+    background: #777777;
+}
+
+.light-theme h1 {
+	color: black;
+}
+
+.light-theme {
+    background-color: #F5F5F5;
+    color: #333333;
+}
+
+.light-theme td {
+    color: #000000;
+}
+
+.light-theme .container {
+    background: #ffffff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .filters input, 
+.light-theme select, 
+.light-theme .modal-content input, 
+.light-theme .modal-content textarea {
+    background: #ddd;
+    color: #222;
+    border: 1px solid #aaa;
+}
+
+.light-theme button {
+    background-color: #007bff;
+    color: white;
+}
+
+.light-theme button:hover {
+    background-color: #0056b3;
+}
+
+.light-theme th {
+    background-color: #007bff;
+}
+
+.light-theme td button {
+    background-color: #dc3545;
+}
+
+.light-theme td button:hover {
+    background-color: #c82333;
+}
+
+.light-theme #theme-toggle {
+    background: #F7F7F730;
+    color: white;
+}
+
+/* Tema Light - Modal */
+.light-theme .modal-content {
+    background: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+}
+
+.light-theme .modal-content input, 
+.light-theme .modal-content textarea {
+    background: #f0f0f0;
+    color: #222;
+    border: 1px solid #aaa;
+}
+
+.light-theme .close {
+    color: #333;
+}
+
+.light-theme .close:hover {
+    color: #dc3545;
+}
+
+.actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Duas colunas */
+    gap: 8px; /* Espaçamento entre os itens */
+}
+
+.actions button,
+.actions a {
+    text-align: center;
+    padding: 8px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    cursor: pointer;
+}
+
+/* Define que o terceiro item ocupa duas colunas */
+.actions a:nth-child(3) {
+    grid-column: span 2;
+}
+
+/* Estilização para hover */
+.actions button:hover,
+.actions a:hover {
+    background-color: #0056b3;
+}
+
+.actions a {
+    background-color: #28a745;
+}
+
+.actions a[style*="color:red;"] {
+    background-color: red;
+}
