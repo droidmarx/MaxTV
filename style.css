@@ -57,21 +57,27 @@ button:hover {
     background-color: #777;
 }
 
+/* Ajustes para a tabela */
 .table-wrapper {
-    overflow-x: auto;
+    width: 100%;
+    overflow-x: hidden; /* Remove a rolagem horizontal */
 }
 
 table {
     width: 100%;
+    min-width: unset; /* Remove a largura mínima */
     border-collapse: collapse;
     margin-top: 10px;
+    table-layout: fixed; /* Garante que as colunas sejam distribuídas igualmente */
 }
 
 th, td {
-    padding: 12px;
+    padding: 6px;
     border: 1px solid #444;
     text-align: center;
     color: white;
+    word-wrap: break-word; /* Quebra o texto dentro das células */
+    white-space: nowrap; /* Evita quebra de linha em textos longos */
 }
 
 th {
@@ -91,8 +97,8 @@ td button:hover {
     background-color: #c9302c;
 }
 
-select{
-	width: 100%,
+select {
+    width: 100%;
 }
 
 /* MODAL */
@@ -137,11 +143,10 @@ select{
 }
 
 .expiring {
-    background-color: yellow !important;
+    background-color: #998A16 !important;
     font-weight: bold;
+    color: black;
 }
-
-
 
 /* Responsividade */
 @media (max-width: 768px) {
@@ -152,18 +157,14 @@ select{
     .modal-content {
         width: 95%;
     }
-}
 
-.table-wrapper {
-    width: 100%;
-    overflow-x: auto; /* Permite rolagem horizontal se necessário */
-}
+    table {
+        table-layout: auto; /* Permite mais flexibilidade para telas menores */
+    }
 
-table {
-    width: 100%;
-    min-width: 800px; /* Define um tamanho mínimo para evitar que as colunas fiquem muito apertadas */
-    border-collapse: collapse;
-    margin-top: 10px;
+    th, td {
+        white-space: normal; /* Permite quebra de linha no mobile */
+    }
 }
 
 #theme-toggle {
@@ -184,17 +185,14 @@ table {
     background: #777777;
 }
 
-.light-theme h1 {
-	color: black;
-}
-
+/* Tema Light */
 .light-theme {
     background-color: #F5F5F5;
     color: #333333;
 }
 
-.light-theme td {
-    color: #000000;
+.light-theme h1 {
+    color: black;
 }
 
 .light-theme .container {
@@ -222,6 +220,10 @@ table {
 
 .light-theme th {
     background-color: #007bff;
+}
+
+.light-theme td {
+    color: #000000;
 }
 
 .light-theme td button {
@@ -259,6 +261,7 @@ table {
     color: #dc3545;
 }
 
+/* Ações */
 .actions {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Duas colunas */
@@ -294,4 +297,36 @@ table {
 
 .actions a[style*="color:red;"] {
     background-color: red;
+}
+
+/* Elementos escondidos */
+.hidden {
+    display: none;
+}
+
+.details {
+    padding: 10px;
+    background: #F9F9F900;
+    border: 1px solid #ddd;
+}
+
+.due-alert {
+    background: red;
+    color: white;
+    padding: 5px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+/* Classe para destacar o nome do cliente */
+.highlight-name {
+    font-weight: bold;
+    color: red;
+}
+
+/* Classe para deixar o ícone vermelho */
+.highlight-icon {
+    color: red;
+    font-size: 1.2em; /* Ícone um pouco maior */
 }
