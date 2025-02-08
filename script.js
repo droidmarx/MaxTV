@@ -57,7 +57,7 @@ function renderClients(filteredClients) {
                 <td class="${nameClass}">${client.cliente}</td>
                 <td>${formattedDate}</td>
                 <td>
-                    <button class="${iconClass}" onclick="toggleDetails(${index})">ℹ️</button>
+                   <button class="${iconClass}" data-aos="zoom-in" onclick="toggleDetails(${index})">ℹ️</button>
                 </td>
             </tr>
             <tr id="details-${index}" class="hidden ${highlightClass}">
