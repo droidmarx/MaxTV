@@ -53,34 +53,34 @@ function renderClients(filteredClients) {
 		const dueMessage = `Olá ${client.cliente}, tudo bem?\n\n🚨 Evite bloqueio automático!\n📅 Seu plano vence em ${formattedDate}.\n💳 Faça o Pix no valor de R$${client.valor} para 11915370708.\n\nNos envie o comprovante e continue assistindo sem interrupções.`;
 
 		clientTable.innerHTML += `
-        <tr>
-            <td class="${nameClass}">${client.cliente}</td>
-            <td>${formattedDate}</td>
-            <td>
-                <button class="${iconClass}" onclick="toggleDetails(${index})">ℹ️</button>
-            </td>
-        </tr>
-        <tr id="details-${index}" class="hidden ${highlightClass}">
-            <td colspan="3">
-                <div class="details">
-                    <p><strong>Tela:</strong> ${client.tela}</p>
-                    <p><strong>Desconto:</strong> ${client.desconto}%</p>
-                    <p><strong>Valor:</strong> R$ ${client.valor}</p>
-                    <p><strong>WhatsApp:</strong> ${client.whats}</p>
-                    <p><strong>Painel:</strong> ${client.painel}</p>
-                    <p><strong>MAC:</strong> ${client.mac}</p>
-                    <p><strong>Observações:</strong> ${client.observacoes}</p>
-                    <div class="actions">
-                        <button onclick="openModal(${index})">📝 Editar</button>
-                        <button onclick="deleteClient(${index})">🗑️ Excluir</button>
-                        <a href="https://wa.me/55${client.whats}" target="_blank">📲 WhatsApp</a>
-                        <a href="#" onclick="renewClient(${index})">🔄 Renovar</a>
-                        ${diffDays <= 3 ? `<a href="https://wa.me/55${client.whats}?text=${encodeURIComponent(dueMessage)}" target="_blank" class="due-alert">
-                            ⚠️ VENCIMENTO </a>` : ""}
+            <tr>
+                <td class="${nameClass}">${client.cliente}</td>
+                <td>${formattedDate}</td>
+                <td>
+                    <button class="${iconClass}" onclick="toggleDetails(${index})">ℹ️</button>
+                </td>
+            </tr>
+            <tr id="details-${index}" class="hidden ${highlightClass}">
+                <td colspan="3">
+                    <div class="details">
+                        <p><strong>Tela:</strong> ${client.tela}</p>
+                        <p><strong>Desconto:</strong> ${client.desconto}%</p>
+                        <p><strong>Valor:</strong> R$ ${client.valor}</p>
+                        <p><strong>WhatsApp:</strong> ${client.whats}</p>
+                        <p><strong>Painel:</strong> ${client.painel}</p>
+                        <p><strong>MAC:</strong> ${client.mac}</p>
+                        <p><strong>Observações:</strong> ${client.observacoes}</p>
+                        <div class="actions">
+                            <button onclick="openModal(${index})">📝 Editar</button>
+                            <button onclick="deleteClient(${index})">🗑️ Excluir</button>
+                            <a href="https://wa.me/55${client.whats}" target="_blank">📲 WhatsApp</a>
+                            <a href="#" onclick="renewClient(${index})">🔄 Renovar</a>
+                            ${diffDays <= 3 ? `<a href="https://wa.me/55${client.whats}?text=${encodeURIComponent(dueMessage)}" target="_blank" class="due-alert">
+                                ⚠️ VENCIMENTO </a>` : ""}
+                        </div>
                     </div>
-                </div>
-            </td>
-        </tr>`;
+                </td>
+            </tr>`;
 	});
 }
 
@@ -149,26 +149,8 @@ form.addEventListener("submit", async function(e) {
 	closeModal();
 });
 
-async function saveClient() {
-	const client = Object.fromEntries(new FormData(form));
-	client.desconto = parseFloat(client.desconto) || 0;
-	client.valor = (parseFloat(client.valor) * (1 - client.desconto / 100)).toFixed(2);
 
-	try {
-		const method = editingIndex !== null ? 'PUT' : 'POST';
-		const url = editingIndex !== null ? `${API_URL}/${clients[editingIndex].id}` : API_URL;
 
-		await fetch(url, {
-			method,
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(client)
-		});
-
-		loadClients();
-	} catch (error) {
-		console.error('Erro ao salvar o cliente:', error);
-	}
-}
 
 // Deleta um cliente
 async function deleteClient(index) {
@@ -182,48 +164,114 @@ async function deleteClient(index) {
 	}
 }
 
-// Função de Renovação corrigida
-async function renewClient(index) {
-    const client = clients[index];
 
-    let daysToAdd = prompt("Quantos dias deseja adicionar à renovação?", "30");
-    daysToAdd = parseInt(daysToAdd);
-    if (isNaN(daysToAdd) || daysToAdd <= 0) {
-        alert("Por favor, insira um número válido de dias.");
+
+// Salva ou atualiza o cliente
+form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    
+    // Previne a execução múltipla
+    if (isSaving) return;  // Se já estiver salvando, não permita nova execução
+    
+    isSaving = true; // Indica que o processo de salvamento começou
+
+
+    isSaving = false; // Permite novos salvamentos após a operação
+
+    closeModal(); // Fecha o modal após salvar
+});
+
+let isSaving = false;  // Variável de controle para impedir salvar múltiplas vezes
+
+async function saveClient() {
+    // Captura os dados do formulário
+    const client = {
+        cliente: document.getElementById("cliente").value,
+        tela: document.getElementById("tela").value,
+        desconto: parseFloat(document.getElementById("desconto").value) || 0,
+        valor: parseFloat(document.getElementById("valor").value) || 0,
+        whats: document.getElementById("whats").value,
+        painel: document.getElementById("painel").value,
+        mac: document.getElementById("mac").value,
+        observacoes: document.getElementById("observacoes").value,
+        vencimento: document.getElementById("vencimento").value,
+    };
+
+    // Calcula o valor com desconto
+    client.valor = (client.valor * (1 - client.desconto / 100)).toFixed(2);
+
+    // Verifica se o valor está correto
+    if (isNaN(client.valor) || client.valor <= 0) {
+        alert("Por favor, insira um valor válido.");
         return;
     }
 
-    let currentDate = new Date(client.vencimento);
-    currentDate.setDate(currentDate.getDate() + daysToAdd);
-    client.vencimento = currentDate.toISOString().split("T")[0];
+    // Verifica se todos os campos obrigatórios estão preenchidos
+    if (!client.cliente || !client.whats || !client.painel || !client.vencimento) {
+        alert("Por favor, preencha todos os campos obrigatórios.");
+        return;
+    }
 
     try {
-        await fetch(`${API_URL}/${client.id}`, {
-            method: 'PUT',
+        const method = editingIndex !== null ? 'PUT' : 'POST';
+        const url = editingIndex !== null ? `${API_URL}/${clients[editingIndex].id}` : API_URL;
+
+        // Envia os dados para a API
+        await fetch(url, {
+            method,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(client)
         });
 
+        // Atualiza a lista de clientes após salvar
         loadClients();
-
-        const formattedDate = formatDate(client.vencimento);
-
-        // Mensagem com quebras de linha corretas
-        const renewalMessage = `Olá ${client.cliente}!\n\n✅ Seu plano foi renovado com sucesso!\n\n📅 *Próximo vencimento: ${formattedDate}.*`;
-
-        // Codifica a mensagem para ser enviada corretamente no WhatsApp
-        const whatsappURL = `https://wa.me/55${client.whats}?text=${encodeURIComponent(renewalMessage)}`;
-
-        window.open(whatsappURL, "_blank");
     } catch (error) {
-        console.error("Erro ao renovar o cliente:", error);
-        alert("Ocorreu um erro ao renovar o cliente. Tente novamente.");
+        console.error('Erro ao salvar o cliente:', error);
     }
+}
+
+
+// Função de Renovação corrigida
+async function renewClient(index) {
+	const client = clients[index];
+
+	let daysToAdd = prompt("Quantos dias deseja adicionar à renovação?", "30");
+	daysToAdd = parseInt(daysToAdd);
+	if (isNaN(daysToAdd) || daysToAdd <= 0) {
+		alert("Por favor, insira um número válido de dias.");
+		return;
+	}
+
+	let currentDate = new Date(client.vencimento);
+	currentDate.setDate(currentDate.getDate() + daysToAdd);
+	client.vencimento = currentDate.toISOString().split("T")[0];
+
+	try {
+		await fetch(`${API_URL}/${client.id}`, {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(client)
+		});
+
+		loadClients();
+
+		const formattedDate = formatDate(client.vencimento);
+
+		// Mensagem com quebras de linha corretas
+		const renewalMessage = `Olá ${client.cliente}!\n\n✅ Seu plano foi renovado com sucesso!\n\n📅 *Próximo vencimento: ${formattedDate}.*`;
+
+		// Codifica a mensagem para ser enviada corretamente no WhatsApp
+		const whatsappURL = `https://wa.me/55${client.whats}?text=${encodeURIComponent(renewalMessage)}`;
+
+		window.open(whatsappURL, "_blank");
+	} catch (error) {
+		console.error("Erro ao renovar o cliente:", error);
+		alert("Ocorreu um erro ao renovar o cliente. Tente novamente.");
+	}
 }
 
 const themeToggle = document.getElementById("theme-toggle");
 const body = document.body;
-
 
 // Configuração do tema
 function setupTheme() {
@@ -250,3 +298,4 @@ function handleLogout() {
 	sessionStorage.removeItem("loggedInUser");
 	window.location.href = "./index.html";
 }
+
