@@ -1,3 +1,30 @@
+:root {
+    /* Cores principais */
+    --primary-bg: #1a1a1a;
+    --secondary-bg: #2a2a2a;
+    --accent-color: #555555;
+    --hover-accent: #777777;
+    --border-color: #444;
+    --highlight-bg: #514A48;
+    --highlight-text: red;
+
+    /* Cores de texto */
+    --primary-text: white;
+    --secondary-text: black;
+    --input-bg: #333;
+    --input-border: #555;
+
+    /* Light Theme */
+    --light-primary-bg: #F5F5F5;
+    --light-secondary-bg: #ffffff;
+    --light-text: #333333;
+    --light-input-bg: #ddd;
+    --light-input-border: #aaa;
+    --light-accent: #007BFF;
+    --light-hover-accent: #0056b3;
+}
+
+/* Reset e configurações globais */
 * {
     margin: 0;
     padding: 0;
@@ -6,15 +33,15 @@
 }
 
 body {
-    background-color: #1a1a1a;
-    color: #000000;
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
     padding: 20px;
 }
 
 .container {
     max-width: 1000px;
     margin: auto;
-    background: #2a2a2a;
+    background: var(--secondary-bg);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
@@ -23,7 +50,7 @@ body {
 h1 {
     text-align: center;
     margin-bottom: 20px;
-    color: white;
+    color: var(--primary-text);
 }
 
 .filters, .actions {
@@ -33,18 +60,22 @@ h1 {
     margin-bottom: 15px;
 }
 
+.button{
+	color: var(--light-input-bg);
+}
+
 .filters input, select {
     flex: 1;
     padding: 10px;
-    background: #333;
-    border: 1px solid #555;
-    color: white;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--primary-text);
     border-radius: 5px;
 }
 
 button {
-    background-color: #555555;
-    color: white;
+    background-color: var(--accent-color);
+    color: var(--primary-text);
     font-size: 16px;
     padding: 10px 15px;
     border: none;
@@ -54,47 +85,46 @@ button {
 }
 
 button:hover {
-    background-color: #777;
+    background-color: var(--hover-accent);
 }
 
 /* Ajustes para a tabela */
 .table-wrapper {
     width: 100%;
-    overflow-x: hidden; /* Remove a rolagem horizontal */
+    overflow-x: hidden;
 }
 
 table {
     width: 100%;
-    min-width: unset; /* Remove a largura mínima */
     border-collapse: collapse;
     margin-top: 10px;
-    table-layout: fixed; /* Garante que as colunas sejam distribuídas igualmente */
+    table-layout: fixed;
 }
 
 th, td {
     padding: 6px;
-    border: 1px solid #444;
+    border: 1px solid var(--border-color);
     text-align: center;
-    color: white;
-    word-wrap: break-word; /* Quebra o texto dentro das células */
-    white-space: nowrap; /* Evita quebra de linha em textos longos */
+    color: var(--primary-text);
+    word-wrap: break-word;
+    white-space: nowrap;
 }
 
 th {
-    background-color: #444;
-    color: white;
+    background-color: var(--border-color);
+    color: var(--primary-text);
 }
 
 td button {
-    background-color: #474444;
-    color: white;
+    background-color: transparent;
+    color: var(--primary-text);
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
 }
 
 td button:hover {
-    background-color: #c9302c;
+    background-color: #2CC9BBC7;
 }
 
 select {
@@ -115,7 +145,7 @@ select {
 }
 
 .modal-content {
-    background: #2a2a2a;
+    background: var(--secondary-bg);
     padding: 20px;
     border-radius: 10px;
     width: 90%;
@@ -126,9 +156,9 @@ select {
     width: 100%;
     padding: 10px;
     margin: 5px 0;
-    background: #333;
-    border: 1px solid #555;
-    color: white;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--primary-text);
     border-radius: 5px;
 }
 
@@ -139,11 +169,11 @@ select {
 }
 
 .close:hover {
-    color: #d9534f;
+    color: #D9534F;
 }
 
 .expiring {
-    background-color: #998A16 !important;
+    background-color: #000000 !important;
     font-weight: bold;
     color: black;
 }
@@ -159,36 +189,36 @@ select {
     }
 
     table {
-        table-layout: auto; /* Permite mais flexibilidade para telas menores */
+        table-layout: auto;
     }
 
     th, td {
-        white-space: normal; /* Permite quebra de linha no mobile */
+        white-space: normal;
     }
 }
 
 #theme-toggle {
-    position: fixed;
+    position: absolute;
     top: 20px;
     right: 20px;
-    background: #444444;
-    color: white;
+    background: var(--border-color);
+    color: var(--primary-text);
     font-size: 20px;
-    padding: 10px;
+    padding: 20px;
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 1s;
 }
 
 #theme-toggle:hover {
-    background: #777777;
+    background: var(--hover-accent);
 }
 
 /* Tema Light */
 .light-theme {
-    background-color: #F5F5F5;
-    color: #333333;
+    background-color: var(--light-primary-bg);
+    color: var(--light-text);
 }
 
 .light-theme h1 {
@@ -196,7 +226,7 @@ select {
 }
 
 .light-theme .container {
-    background: #ffffff;
+    background: var(--light-secondary-bg);
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -204,57 +234,51 @@ select {
 .light-theme select, 
 .light-theme .modal-content input, 
 .light-theme .modal-content textarea {
-    background: #ddd;
-    color: #222;
-    border: 1px solid #aaa;
+    background: var(--light-input-bg);
+    color: var(--light-text);
+    border: 1px solid var(--light-input-border);
 }
 
 .light-theme button {
-    background-color: #007bff;
+    background-color: var(--light-accent);
     color: white;
 }
 
 .light-theme button:hover {
-    background-color: #0056b3;
+    background-color: var(--light-hover-accent);
 }
 
 .light-theme th {
-    background-color: #007bff;
+    background-color: var(--light-accent);
 }
 
 .light-theme td {
-    color: #000000;
+    color: var(--secondary-text);
 }
 
 .light-theme td button {
-    background-color: #dc3545;
+    background-color: #007BFF;
 }
 
 .light-theme td button:hover {
-    background-color: #c82333;
+    background-color: var(--light-accent);
 }
 
 .light-theme #theme-toggle {
-    background: #F7F7F730;
+    background: rgba(247, 247, 247, 0.3);
     color: white;
+    transition: 1.3s;
+
 }
 
-/* Tema Light - Modal */
 .light-theme .modal-content {
-    background: #fff;
-    color: #333;
-    border: 1px solid #ccc;
-}
-
-.light-theme .modal-content input, 
-.light-theme .modal-content textarea {
-    background: #f0f0f0;
-    color: #222;
-    border: 1px solid #aaa;
+    background: var(--light-secondary-bg);
+    color: var(--light-text);
+    border: 1px solid var(--light-input-border);
 }
 
 .light-theme .close {
-    color: #333;
+    color: var(--light-text);
 }
 
 .light-theme .close:hover {
@@ -264,8 +288,8 @@ select {
 /* Ações */
 .actions {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Duas colunas */
-    gap: 8px; /* Espaçamento entre os itens */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
 }
 
 .actions button,
@@ -275,20 +299,18 @@ select {
     border-radius: 5px;
     text-decoration: none;
     color: white;
-    background-color: #007bff;
+    background-color: var(--light-accent);
     border: none;
     cursor: pointer;
 }
 
-/* Define que o terceiro item ocupa duas colunas */
 .actions a:nth-child(3) {
     grid-column: span 2;
 }
 
-/* Estilização para hover */
 .actions button:hover,
 .actions a:hover {
-    background-color: #0056b3;
+    background-color: var(--light-hover-accent);
 }
 
 .actions a {
@@ -306,7 +328,7 @@ select {
 
 .details {
     padding: 10px;
-    background: #F9F9F900;
+    background: #696969;
     border: 1px solid #ddd;
 }
 
@@ -319,14 +341,13 @@ select {
     margin-top: 5px;
 }
 
-/* Classe para destacar o nome do cliente */
 .highlight-name {
     font-weight: bold;
-    color: red;
+    color: var(--highlight-text);
+    background-color: var(--highlight-bg);
+    border: 10px;
 }
 
-/* Classe para deixar o ícone vermelho */
-.highlight-icon {
-    color: red;
-    font-size: 1.2em; /* Ícone um pouco maior */
+.light-theme .highlight-name {
+    color: white;
 }
