@@ -8,8 +8,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
 </head>
 <body>
-    <button id="theme-toggle">🌙</button>
-    
+
+    <!-- Botão de engrenagem -->
+    <button id="settings-toggle">⚙️</button>
+
+    <!-- Menu lateral -->
+<div id="settings-menu" class="settings-menu">
+<button class="close-menu" onclick="toggleMenu()">> > > ></button>
+
+	<span id="welcome-message"></span>
+	<br><br>
+	<h3>Configurações</h3>
+
+	<button id="theme-toggle">Alterar Tema</button>
+	<button onclick="acao2()">Ação 2</button>
+	<button onclick="acao3()">Ação 3</button>
+	<button onclick="handleLogout()" id="logoutBtn">Logout</button>
+</div>
+
     <div class="container">
         <h1 data-aos="fade-down">Gerenciador de Clientes</h1>
 
@@ -66,5 +82,7 @@
     <script>
         AOS.init(); // Inicializa as animações
     </script>
+
+
 </body>
 </html>
