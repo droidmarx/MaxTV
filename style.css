@@ -30,8 +30,8 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Arial', sans-serif;
+    list-style: none; 
 }
-
 body {
     background-color: var(--primary-bg);
     color: var(--primary-text);
@@ -173,7 +173,7 @@ select {
 }
 
 .expiring {
-    background-color: #000000 !important;
+    background-color: #F70101 !important;
     font-weight: bold;
     color: black;
 }
@@ -197,23 +197,38 @@ select {
     }
 }
 
-#theme-toggle {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: var(--border-color);
-    color: var(--primary-text);
-    font-size: 20px;
-    padding: 20px;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: 1s;
-}
+ /* Estilizando o botão */
+ #theme-toggle {
+ 	position: flex;
+ 	background: none;
+ 	border: 2px solid #fff;
+ 	padding: 8px 16px;
+ 	font-size: 16px;
+ 	cursor: pointer;
+ 	color: white;
+ 	background-color: #333;
+ 	border-radius: 5px;
+ 	transition: 0.3s;
+ }
 
-#theme-toggle:hover {
-    background: var(--hover-accent);
-}
+ /* Tema claro */
+ .light-theme {
+ 	background-color: #f4f4f4;
+ 	color: #333;
+ }
+
+ .light-theme #theme-toggle {
+ 	background-color: #ddd;
+ 	color: #333;
+ 	border: 2px solid #333;
+ }
+
+ /* Tema escuro */
+ body {
+ 	background-color: #222;
+ 	color: white;
+ 	transition: background 0.3s, color 0.3s;
+ }
 
 /* Tema Light */
 .light-theme {
@@ -324,12 +339,15 @@ select {
 /* Elementos escondidos */
 .hidden {
     display: none;
+    opacity: 0;
+    transition: opacity 0.5 ease;
 }
 
 .details {
     padding: 10px;
     background: #696969;
     border: 1px solid #ddd;
+    transition: 0.5 ease;
 }
 
 .due-alert {
@@ -348,6 +366,90 @@ select {
     border: 10px;
 }
 
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.5);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.highlight-icon {
+    display: inline-block; /* Garante que a escala funcione corretamente */
+    transition: transform 0.5s ease-in-out;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
 .light-theme .highlight-name {
     color: white;
 }
+
+
+
+        /* Estilizando o botão de engrenagem */
+        #settings-toggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Estilizando o menu lateral */
+        .settings-menu {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: 100%;
+            background: #CB2020;
+            color: white;
+            padding: 20px;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            border-radius: 8px ;
+
+        }
+
+        /* Quando o menu está aberto */
+        .settings-menu.open {
+            right: 0;
+        }
+
+        /* Botão para fechar o menu */
+        .close-menu {
+            background: none;
+            border: none;
+            color: white;
+            border-radius: 0px;
+            font-size: 20px;
+            cursor: pointer;
+            position: absolute;
+            top: -10px;
+            right: 0px;
+        }
+
+
+        .settings-menu button {
+            margin-top: 10px;
+            width: 100%;
+            padding: 10px;
+            background: #444;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .settings-menu button:hover {
+            background: #555;
+        }
+        
