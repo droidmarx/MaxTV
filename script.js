@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 	loadClients();
 	setupFilters();
-	setupTheme();
+	setupTheme()
 });
 
 // Elementos do DOM
@@ -50,7 +50,7 @@ function renderClients(filteredClients) {
 
 		const formattedDate = formatDate(client.vencimento);
 
-		const dueMessage = `Olá ${client.cliente}, tudo bem?\n\n🚨 Evite bloqueio automático!\n📅 Seu plano vence em ${formattedDate}.\n💳 Faça o Pix no valor de R$${client.valor} para 11915370708.\n\nNos envie o comprovante e continue assistindo sem interrupções.`;
+		const dueMessage = `Olá ${client.cliente}, tudo bem?\n\n🚨 Evite bloqueio automático!\n\n📅 Seu plano vence em ${formattedDate} as 23:59 \n\n💳 Faça o Pix no valor de R$${client.valor} para 11915370708.\n\nNos envie o comprovante e continue assistindo sem interrupções.`;
 
 		clientTable.innerHTML += `
             <tr>
@@ -286,6 +286,67 @@ function setupTheme() {
 	});
 }
 
+
+        // Função para abrir e fechar o menu lateral
+        function toggleMenu() {
+            document.getElementById("settings-menu").classList.toggle("open");
+        }
+
+        // Evento para abrir o menu ao clicar na engrenagem
+        document.getElementById("settings-toggle").addEventListener("click", toggleMenu);
+
+        // Funções de exemplo para os botões do menu
+        function acao1() {
+            
+document.addEventListener("DOMContentLoaded", function() {
+	const themeToggle = document.getElementById("theme-toggle");
+	const body = document.body;
+
+	// Aplicar tema salvo no localStorage ao carregar a página
+	function applySavedTheme() {
+		const savedTheme = localStorage.getItem("theme");
+		if (savedTheme === "light") {
+			body.classList.add("light-theme");
+			themeToggle.textContent = "☀️ Light Mode";
+		} else {
+			body.classList.remove("light-theme");
+			themeToggle.textContent = "🌙 Dark Mode";
+		}
+	}
+
+	// Função para alternar entre os temas
+	function toggleTheme() {
+		if (body.classList.contains("light-theme")) {
+			body.classList.remove("light-theme");
+			themeToggle.textContent = "🌙 Dark Mode";
+			localStorage.setItem("theme", "dark");
+		} else {
+			body.classList.add("light-theme");
+			themeToggle.textContent = "☀️ Light Mode";
+			localStorage.setItem("theme", "light");
+		}
+	}
+
+	// Aplicar tema salvo ao carregar a página
+	applySavedTheme();
+
+	// Evento de clique no botão
+	themeToggle.addEventListener("click", toggleTheme);
+});
+            
+        }
+
+        function acao2() {
+            alert("Ação 2 executada!");
+        }
+
+        function acao3() {
+            alert("Ação 3 executada!");
+        }
+
+
+
+
 // Verificação de login
 const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
 if (!loggedInUser) {
@@ -299,3 +360,10 @@ function handleLogout() {
 	window.location.href = "./index.html";
 }
 
+
+   const welcomeMessage = document.querySelector("#welcome-message");
+   welcomeMessage.textContent = `Bem-vindo, ${loggedInUser.nome} !`;
+          document.body.classList.add("blur-effect");
+          
+          
+          
