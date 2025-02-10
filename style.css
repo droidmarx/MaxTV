@@ -39,6 +39,8 @@ body {
 }
 
 .container {
+    position: relative;
+    top: 90px;
     max-width: 1000px;
     margin: auto;
     background: var(--secondary-bg);
@@ -396,13 +398,21 @@ select {
     color: white;
 }
 
-
+.nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #B40707; /* Cor de fundo opcional */
+    z-index: 1000; /* Mantém sobre outros elementos */
+}
 
         /* Estilizando o botão de engrenagem */
         #settings-toggle {
-            position: absolute;
-            top: 15px;
-            right: 15px;
+            position: fixed;
+            top: 8px;
+            right: 8px;
             background: none;
             border: none;
             font-size: 24px;
@@ -503,4 +513,11 @@ span {
 .panel-item button {
 	margin-left: 10px;
 	cursor: pointer;
+}
+
+#welcome-message {
+  position: absolute;
+  width: 300px;
+  margin: 10px;
+  padding: 5px;
 }
