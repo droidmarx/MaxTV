@@ -50,8 +50,8 @@ async function renderClients(filteredClients) {
         const dueDate = new Date(client.vencimento);
         const diffDays = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
         let highlightClass = diffDays <= 1 ? "expiring" : diffDays <= 3 ? "expiring" : "";
-        let nameClass = diffDays <= 1 ? "highlight-name" : "";
-        let iconClass = diffDays <= 1 ? "highlight-icon" : "";
+        let nameClass = diffDays <= 3 ? "highlight-name" : "";
+        let iconClass = diffDays <= 3 ? "highlight-icon" : "";
 
         const formattedDate = formatDate(client.vencimento);
       const dueMessage = `Olá ${client.cliente}, tudo bem? 😊\n\n🚨 Para evitar qualquer interrupção no seu acesso, lembramos que seu plano vence em ${formattedDate} às 23:59.\n\n📅 Faça o pagamento de R$${client.valor} via Pix para o número 11915370708.\n\n💳 Após o pagamento, envie o comprovante e continue aproveitando sem preocupações!\n\nAgradecemos pela confiança! 💙`;
@@ -92,6 +92,8 @@ async function renderClients(filteredClients) {
             </tr>`;
     });
 }
+
+
 
 // Alterna a visibilidade dos detalhes (apenas um aberto por vez)
 function toggleDetails(index) {
