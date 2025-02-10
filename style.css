@@ -373,7 +373,8 @@ select {
     font-weight: bold;
     color: var(--highlight-text);
     background-color: var(--highlight-bg);
-    border: 10px;
+    border: solid 2px;
+    
 }
 
 @keyframes pulse {
@@ -392,6 +393,7 @@ select {
     display: inline-block; /* Garante que a escala funcione corretamente */
     transition: transform 0.5s ease-in-out;
     animation: pulse 1.5s infinite ease-in-out;
+    border: 2px solid red;
 }
 
 .light-theme .highlight-name {
