@@ -83,8 +83,8 @@ async function renderClients(filteredClients) {
                             <button onclick="openModal(${index})">📝 Editar</button>
                             <button onclick="deleteClient(${index})">🗑️ Excluir</button>
                             <a href="https://wa.me/55${client.whats}" target="_blank">📲 WhatsApp</a>
-                            <a href="#" onclick="renewClient(${index})">🔄 Renovar</a>
-                            ${diffDays <= 3 ? `<a href="https://wa.me/55${client.whats}?text=${encodeURIComponent(dueMessage)}" target="_blank" class="due-alert">
+                            <a href="#" onclick="renewClient('${client.id}')">🔄 Renovar</a>
+                            ${diffDays <= 5 ? `<a href="https://wa.me/55${client.whats}?text=${encodeURIComponent(dueMessage)}" target="_blank" class="due-alert">
                                 ⚠️ VENCIMENTO </a>` : ""}
                         </div>
                     </div>
@@ -250,37 +250,47 @@ async function saveClient() {
 
 
 // Função de Renovação corrigida
-async function renewClient(index) {
-	const client = clients[index];
+async function renewClient(clientId) {
+	// Encontra o cliente correto pelo ID
+	const client = clients.find(c => c.id === clientId);
+	if (!client) {
+		alert("Cliente não encontrado!");
+		return;
+	}
 
 	let daysToAdd = prompt("Quantos dias deseja adicionar à renovação?", "30");
 	daysToAdd = parseInt(daysToAdd);
+
 	if (isNaN(daysToAdd) || daysToAdd <= 0) {
 		alert("Por favor, insira um número válido de dias.");
 		return;
 	}
 
-	let currentDate = new Date(client.vencimento);
+	// Clona o objeto para evitar alterações diretas no array
+	let updatedClient = { ...client };
+
+	let currentDate = new Date(updatedClient.vencimento);
 	currentDate.setDate(currentDate.getDate() + daysToAdd);
-	client.vencimento = currentDate.toISOString().split("T")[0];
+	updatedClient.vencimento = currentDate.toISOString().split("T")[0];
 
 	try {
-		await fetch(`${API_URL}/${client.id}`, {
+		// Atualiza no banco de dados
+		await fetch(`${API_URL}/${updatedClient.id}`, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(client)
+			body: JSON.stringify(updatedClient)
 		});
 
-		loadClients();
+		// Atualiza a lista após a renovação
+		await loadClients();
 
-		const formattedDate = formatDate(client.vencimento);
+		const formattedDate = formatDate(updatedClient.vencimento);
 
-		// Mensagem com quebras de linha corretas
-		const renewalMessage = `Olá ${client.cliente}!\n\n✅ Seu plano foi renovado com sucesso!\n\n📅 *Próximo vencimento: ${formattedDate}.*`;
+		// Mensagem formatada para WhatsApp
+		const renewalMessage = `Olá ${updatedClient.cliente}!\n\n✅ Seu plano foi renovado com sucesso!\n\n📅 *Próximo vencimento: ${formattedDate}.*`;
 
-		// Codifica a mensagem para ser enviada corretamente no WhatsApp
-		const whatsappURL = `https://wa.me/55${client.whats}?text=${encodeURIComponent(renewalMessage)}`;
-
+		// Abre o link do WhatsApp
+		const whatsappURL = `https://wa.me/55${updatedClient.whats}?text=${encodeURIComponent(renewalMessage)}`;
 		window.open(whatsappURL, "_blank");
 	} catch (error) {
 		console.error("Erro ao renovar o cliente:", error);
