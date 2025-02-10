@@ -111,9 +111,16 @@ function toggleDetails(index) {
 
 // Formata a data para DD/MM/AAAA
 function formatDate(dateStr) {
-	const date = new Date(dateStr);
-	return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+	const date = new Date(dateStr + "T00:00:00"); // Garante que a data seja local
+	return new Intl.DateTimeFormat("pt-BR", {
+		day: "2-digit",
+		month: "2-digit",
+		year: "numeric",
+		timeZone: "America/Sao_Paulo"
+	}).format(date);
 }
+
+
 
 // Configuração da busca
 function setupFilters() {
