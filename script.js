@@ -25,39 +25,46 @@ async function loadClients() {
 	}
 }
 
-// Renderiza a tabela com os clientes filtrados e ordenados
-function renderClients(filteredClients) {
-	clientTable.innerHTML = "";
 
-	filteredClients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
 
-	filteredClients.forEach((client, index) => {
-		const now = new Date();
-		const dueDate = new Date(client.vencimento);
-		const diffDays = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
-		let highlightClass = "";
-		let nameClass = "";
-		let iconClass = "";
+//RENDER CLIENTES
 
-		// Verifica se o vencimento é 1 dia
-		if (diffDays <= 1) {
-			highlightClass = "expiring"; // Para o fundo de vencimento próximo
-			nameClass = "highlight-name"; // Nome em vermelho
-			iconClass = "highlight-icon"; // Ícone em vermelho
-		} else if (diffDays <= 3) {
-			highlightClass = "expiring"; // Para os vencimentos próximos
-		}
+async function fetchPaineis() {
+	try {
+		const response = await fetch("https://66d39f5c184dce1713d09736.mockapi.io/Api/v1/paineis"); // URL correta da MockAPI
+		return await response.json();
+	} catch (error) {
+		console.error("Erro ao buscar painéis:", error);
+		return [];
+	}
+}
 
-		const formattedDate = formatDate(client.vencimento);
+async function renderClients(filteredClients) {
+    const paineis = await fetchPaineis(); // Busca os painéis da MockAPI
+    clientTable.innerHTML = "";
 
-		const dueMessage = `Olá ${client.cliente}, tudo bem?\n\n🚨 Evite bloqueio automático!\n\n📅 Seu plano vence em ${formattedDate} as 23:59 \n\n💳 Faça o Pix no valor de R$${client.valor} para 11915370708.\n\nNos envie o comprovante e continue assistindo sem interrupções.`;
+    filteredClients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
 
-		clientTable.innerHTML += `
+    filteredClients.forEach((client, index) => {
+        const now = new Date();
+        const dueDate = new Date(client.vencimento);
+        const diffDays = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
+        let highlightClass = diffDays <= 1 ? "expiring" : diffDays <= 3 ? "expiring" : "";
+        let nameClass = diffDays <= 1 ? "highlight-name" : "";
+        let iconClass = diffDays <= 1 ? "highlight-icon" : "";
+
+        const formattedDate = formatDate(client.vencimento);
+        const dueMessage = `Olá ${client.cliente}, tudo bem?\n\n🚨 Evite bloqueio automático!\n\n📅 Seu plano vence em ${formattedDate} às 23:59\n\n💳 Faça o Pix no valor de R$${client.valor} para 11915370708.\n\nNos envie o comprovante e continue assistindo sem interrupções.`;
+
+        // 🔍 Busca o painel pelo ID armazenado no cliente
+        const painelEncontrado = paineis.find(p => p.id === client.painel);
+
+        clientTable.innerHTML += `
             <tr>
                 <td class="${nameClass}">${client.cliente}</td>
                 <td>${formattedDate}</td>
                 <td>
-                   <button class="${iconClass}" data-aos="zoom-in" onclick="toggleDetails(${index})">ℹ️</button>
+                    <button class="${iconClass}" data-aos="zoom-in" onclick="toggleDetails(${index})">ℹ️</button>
                 </td>
             </tr>
             <tr id="details-${index}" class="hidden ${highlightClass}">
@@ -67,7 +74,9 @@ function renderClients(filteredClients) {
                         <p><strong>Desconto:</strong> ${client.desconto}%</p>
                         <p><strong>Valor:</strong> R$ ${client.valor}</p>
                         <p><strong>WhatsApp:</strong> ${client.whats}</p>
-                        <p><strong>Painel:</strong> ${client.painel}</p>
+                        <p><strong>Painel:</strong> 
+                            ${painelEncontrado ? `<a href="${painelEncontrado.link}" target="_blank">${painelEncontrado.nome}</a>` : "Painel não encontrado"}
+                        </p>
                         <p><strong>MAC:</strong> ${client.mac}</p>
                         <p><strong>Observações:</strong> ${client.observacoes}</p>
                         <div class="actions">
@@ -81,7 +90,7 @@ function renderClients(filteredClients) {
                     </div>
                 </td>
             </tr>`;
-	});
+    });
 }
 
 // Alterna a visibilidade dos detalhes (apenas um aberto por vez)
@@ -345,10 +354,126 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
 
+  
+//MODIFICAR PAINEL CRUD          
+          
+          const apiURL = "https://66d39f5c184dce1713d09736.mockapi.io/Api/v1/paineis"; // Substitua pelo seu MockAPI
+
+// Abre o modal
+function openPanelManager() {
+    document.getElementById('panelManagerModal').style.display = 'flex';
+    fetchPanels();
+}
+
+// Fecha o modal
+function closePanelManager() {
+    document.getElementById('panelManagerModal').style.display = 'none';
+}
+
+// Fetch (R - READ) - Carrega os painéis na lista e no select
+async function fetchPanels() {
+    try {
+        const response = await fetch(apiURL);
+        const data = await response.json();
+        updatePanelList(data);
+        updatePanelSelect(data);
+    } catch (error) {
+        console.error("Erro ao buscar painéis:", error);
+    }
+}
+
+// Atualiza a lista de painéis no modal
+function updatePanelList(paineis) {
+    const panelList = document.getElementById('panelList');
+    panelList.innerHTML = "";
+
+    paineis.forEach(panel => {
+        const li = document.createElement('li');
+        li.classList.add("panel-item");
+        li.innerHTML = `
+            <span>${panel.nome} - <a href="${panel.link}" target="_blank">${panel.link}</a></span>
+            <button onclick="editPanel('${panel.id}', '${panel.nome}', '${panel.link}')">✏️</button>
+            <button onclick="deletePanel('${panel.id}')">🗑️</button>
+        `;
+        panelList.appendChild(li);
+    });
+}
+
+// Atualiza o select de painéis no formulário de clientes
+function updatePanelSelect(paineis) {
+    const panelSelect = document.getElementById('painel');
+    panelSelect.innerHTML = `<option value="">Selecione um painel</option>`;
+    
+    paineis.forEach(panel => {
+        const option = document.createElement('option');
+        option.value = panel.id;
+        option.textContent = panel.nome;
+        panelSelect.appendChild(option);
+    });
+}
+
+// Create/Update (C/U - CREATE & UPDATE)
+document.getElementById('panelForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const id = document.getElementById('panelId').value;
+    const nome = document.getElementById('panelName').value;
+    const link = document.getElementById('panelLink').value;
+
+    const panelData = { nome, link };
+
+    try {
+        if (id) {
+            // Atualizar painel (U - UPDATE)
+            await fetch(`${apiURL}/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(panelData),
+            });
+        } else {
+            // Criar painel (C - CREATE)
+            await fetch(apiURL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(panelData),
+            });
+        }
+
+        document.getElementById('panelForm').reset();
+        fetchPanels();
+    } catch (error) {
+        console.error("Erro ao salvar painel:", error);
+    }
+});
+
+// Editar um painel
+function editPanel(id, nome, link) {
+    document.getElementById('panelId').value = id;
+    document.getElementById('panelName').value = nome;
+    document.getElementById('panelLink').value = link;
+}
+
+// Delete (D - DELETE) - Excluir um painel
+async function deletePanel(id) {
+    if (confirm("Tem certeza que deseja excluir este painel?")) {
+        try {
+            await fetch(`${apiURL}/${id}`, {
+                method: "DELETE",
+            });
+            fetchPanels();
+        } catch (error) {
+            console.error("Erro ao excluir painel:", error);
+        }
+    }
+}
+
+// Inicializa a lista de painéis ao carregar a página
+document.addEventListener("DOMContentLoaded", fetchPanels);
+
 
 
 // Verificação de login
-const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
+//const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
 if (!loggedInUser) {
 	alert("Você precisa estar logado.");
 	window.location.href = "index.html";
@@ -364,6 +489,5 @@ function handleLogout() {
    const welcomeMessage = document.querySelector("#welcome-message");
    welcomeMessage.textContent = `Bem-vindo, ${loggedInUser.nome} !`;
           document.body.classList.add("blur-effect");
-          
           
           
