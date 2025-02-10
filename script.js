@@ -473,7 +473,7 @@ document.addEventListener("DOMContentLoaded", fetchPanels);
 
 
 // Verificação de login
-//const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
+const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
 if (!loggedInUser) {
 	alert("Você precisa estar logado.");
 	window.location.href = "index.html";
