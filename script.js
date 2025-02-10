@@ -54,7 +54,7 @@ async function renderClients(filteredClients) {
         let iconClass = diffDays <= 1 ? "highlight-icon" : "";
 
         const formattedDate = formatDate(client.vencimento);
-        const dueMessage = `Olá ${client.cliente}, tudo bem?\n\n🚨 Evite bloqueio automático!\n\n📅 Seu plano vence em ${formattedDate} às 23:59\n\n💳 Faça o Pix no valor de R$${client.valor} para 11915370708.\n\nNos envie o comprovante e continue assistindo sem interrupções.`;
+      const dueMessage = `Olá ${client.cliente}, tudo bem? 😊\n\n🚨 Para evitar qualquer interrupção no seu acesso, lembramos que seu plano vence em ${formattedDate} às 23:59.\n\n📅 Faça o pagamento de R$${client.valor} via Pix para o número 11915370708.\n\n💳 Após o pagamento, envie o comprovante e continue aproveitando sem preocupações!\n\nAgradecemos pela confiança! 💙`;
 
         // 🔍 Busca o painel pelo ID armazenado no cliente
         const painelEncontrado = paineis.find(p => p.id === client.painel);
@@ -471,23 +471,23 @@ async function deletePanel(id) {
 document.addEventListener("DOMContentLoaded", fetchPanels);
 
 
+// Verificar Login
 
-// Verificação de login
 const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
-if (!loggedInUser) {
-	alert("Você precisa estar logado.");
+
+if (loggedInUser) {
+
+	document.body.classList.add("blur-effect");
+
+} else {
+	alert("Voce precisa estar logado.");
 	window.location.href = "index.html";
 }
 
-// Função de logout
 function handleLogout() {
-	sessionStorage.removeItem("loggedInUser");
 	window.location.href = "./index.html";
 }
-
 
    const welcomeMessage = document.querySelector("#welcome-message");
    welcomeMessage.textContent = `Bem-vindo, ${loggedInUser.nome} !`;
           document.body.classList.add("blur-effect");
-          
-          
