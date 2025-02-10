@@ -10,13 +10,16 @@
 <body>
 
     <!-- Botão de engrenagem -->
-    <button id="settings-toggle">⚙️</button>
+    <div class="nav">
+    		<span id="welcome-message"></span>
+    	    <button id="settings-toggle">⚙️</button>
+    </div>
 
     <!-- Menu lateral -->
 <div id="settings-menu" class="settings-menu">
 <button class="close-menu" onclick="toggleMenu()">> > > ></button>
 
-	<span id="welcome-message"></span>
+	
 	<br><br>
 	<h3>Configurações</h3>
 
@@ -87,18 +90,11 @@
                 <input type="text" id="tela" placeholder="Tela">
                 <input type="number" id="desconto" placeholder="Desconto (%)" min="0" max="100">
                 <input type="number" id="valor" placeholder="Valor (R$)" step="0.01" required>
-                <input type="tel" id="whats" placeholder="WhatsApp (DDD + Número)">
+                <input type="tel" id="whats" placeholder="WhatsApp (DDD + Número)" required>
                 
                 <select id="painel" required>
-                    <option value="">Selecione um painel</option>Olá Test, tudo bem? 😊
+                    <option value="">Selecione um painel</option>
 
-🚨 Para evitar qualquer interrupção no seu acesso, lembramos que seu plano vence em 06/02/2025.
-
-📅 Faça o pagamento de R$30.00 via Pix para o número 11915370708.
-
-💳 Após o pagamento, envie o comprovante e continue aproveitando sem preocupações!
-
-Agradecemos pela confiança! 💙
                 </select>
                 
                 <input type="text" id="mac" placeholder="MAC">
@@ -108,7 +104,7 @@ Agradecemos pela confiança! 💙
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="doc.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
         AOS.init(); // Inicializa as animações
