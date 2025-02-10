@@ -21,7 +21,9 @@
 	<h3>Configurações</h3>
 
 	<button id="theme-toggle">Alterar Tema</button>
-	<button onclick="acao2()">Ação 2</button>
+	
+<!-- Botão para Gerenciar Painéis -->
+<button onclick="openPanelManager()">🛠️ Gerenciar Painéis</button>
 	<button onclick="acao3()">Ação 3</button>
 	<button onclick="handleLogout()" id="logoutBtn">Logout</button>
 </div>
@@ -49,6 +51,31 @@
         </div>
     </div>
 
+
+<!-- Modal de Gerenciamento de Painéis -->
+<div id="panelManagerModal" class="modalPainel">
+    <div class="modal-content">
+        <span class="closePainel" onclick="closePanelManager()">&times;</span>
+        <h2>Gerenciar Painéis</h2>
+
+        <!-- Formulário para Criar/Editar Painel -->
+        <form id="panelForm">
+            <input type="hidden" id="panelId">
+            <input type="text" id="panelName" placeholder="Nome do Painel" required>
+            <input type="url" id="panelLink" placeholder="Link do Painel" required>
+            <button type="submit">Salvar</button>
+        </form>
+        <br>
+
+        <!-- Lista de Painéis -->
+        <h3>Lista de Painéis</h3>
+        <br>
+        <ul id="panelList"></ul>
+    </div>
+</div>
+
+
+
     <!-- Modal -->
     <div id="modal" class="modal">
         <div class="modal-content" data-aos="zoom-in">
@@ -63,11 +90,15 @@
                 <input type="tel" id="whats" placeholder="WhatsApp (DDD + Número)">
                 
                 <select id="painel" required>
-                    <option value="">Selecione um painel</option>
-                    <option value="ACSB">ACSB TV</option>
-                    <option value="CORE TV">CORE TV</option>
-                    <option value="SLIM TV">SLIM TV</option>
-                    <option value="MK21 TV">MK21 TV</option>
+                    <option value="">Selecione um painel</option>Olá Test, tudo bem? 😊
+
+🚨 Para evitar qualquer interrupção no seu acesso, lembramos que seu plano vence em 06/02/2025.
+
+📅 Faça o pagamento de R$30.00 via Pix para o número 11915370708.
+
+💳 Após o pagamento, envie o comprovante e continue aproveitando sem preocupações!
+
+Agradecemos pela confiança! 💙
                 </select>
                 
                 <input type="text" id="mac" placeholder="MAC">
