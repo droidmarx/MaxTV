@@ -40,34 +40,34 @@ async function fetchPaineis() {
 }
 
 async function renderClients(filteredClients) {
-    const paineis = await fetchPaineis(); // Busca os painéis da MockAPI
-    clientTable.innerHTML = "";
+	const paineis = await fetchPaineis();
+	clientTable.innerHTML = "";
 
-    filteredClients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+	filteredClients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
 
-    filteredClients.forEach((client, index) => {
-        const now = new Date();
-        const dueDate = new Date(client.vencimento);
-        const diffDays = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
-        let highlightClass = diffDays <= 1 ? "expiring" : diffDays <= 3 ? "expiring" : "";
-        let nameClass = diffDays <= 3 ? "highlight-name" : "";
-        let iconClass = diffDays <= 3 ? "highlight-icon" : "";
+	filteredClients.forEach(client => {
+		const now = new Date();
+		const dueDate = new Date(client.vencimento);
+		const diffDays = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
 
-        const formattedDate = formatDate(client.vencimento);
-      const dueMessage = `Olá ${client.cliente}, tudo bem? 😊\n\n🚨 Para evitar qualquer interrupção no seu acesso, lembramos que seu plano vence em ${formattedDate} às 23:59.\n\n📅 Faça o pagamento de R$${client.valor} via Pix para o número 11915370708.\n\n💳 Após o pagamento, envie o comprovante e continue aproveitando sem preocupações!\n\nAgradecemos pela confiança! 💙`;
+		let highlightClass = diffDays <= 5 ? "expiring" : "";
+		let nameClass = diffDays <= 5 ? "highlight-name" : "";
+		let iconClass = diffDays <= 5 ? "highlight-icon" : "";
 
-        // 🔍 Busca o painel pelo ID armazenado no cliente
-        const painelEncontrado = paineis.find(p => p.id === client.painel);
+		const formattedDate = formatDate(client.vencimento);
+		const dueMessage = `Olá ${client.cliente}, tudo bem? 😊\n\n🚨 Para evitar qualquer interrupção no seu acesso, lembramos que seu plano vence em ${formattedDate} às 23:59.\n\n📅 Faça o pagamento de R$${client.valor} via Pix para o número 11915370708.\n\n💳 Após o pagamento, envie o comprovante e continue aproveitando sem preocupações!\n\nAgradecemos pela confiança! 💙`;
 
-        clientTable.innerHTML += `
-            <tr>
-                <td class="${nameClass}">${client.cliente}</td>
+		const painelEncontrado = paineis.find(p => p.id === client.painel);
+
+		clientTable.innerHTML += `
+            <tr class="${highlightClass}">
+                <td class="${nameClass}">${client.id} - ${client.cliente}</td>
                 <td>${formattedDate}</td>
                 <td>
-                    <button class="${iconClass}" data-aos="zoom-in" onclick="toggleDetails(${index})">ℹ️</button>
+                    <button class="${iconClass}" data-aos="zoom-in" onclick="toggleDetails('${client.id}')">ℹ️</button>
                 </td>
             </tr>
-            <tr id="details-${index}" class="hidden ${highlightClass}">
+            <tr id="details-${client.id}" class="hidden">
                 <td colspan="3">
                     <div class="details">
                         <p><strong>Tela:</strong> ${client.tela}</p>
@@ -80,8 +80,8 @@ async function renderClients(filteredClients) {
                         <p><strong>MAC:</strong> ${client.mac}</p>
                         <p><strong>Observações:</strong> ${client.observacoes}</p>
                         <div class="actions">
-                            <button onclick="openModal(${index})">📝 Editar</button>
-                            <button onclick="deleteClient(${index})">🗑️ Excluir</button>
+                            <button onclick="openModal('${client.id}')">📝 Editar</button>
+                            <button onclick="deleteClient('${client.id}')">🗑️ Excluir</button>
                             <a href="https://wa.me/55${client.whats}" target="_blank">📲 WhatsApp</a>
                             <a href="#" onclick="renewClient('${client.id}')">🔄 Renovar</a>
                             ${diffDays <= 5 ? `<a href="https://wa.me/55${client.whats}?text=${encodeURIComponent(dueMessage)}" target="_blank" class="due-alert">
@@ -90,7 +90,7 @@ async function renderClients(filteredClients) {
                     </div>
                 </td>
             </tr>`;
-    });
+	});
 }
 
 
@@ -141,17 +141,28 @@ function applyFilters() {
 }
 
 // Abre o modal de edição ou criação
-function openModal(index = null) {
-	editingIndex = index;
-	if (index !== null) {
-		const client = clients[index];
+function openModal(clientId = null) {
+	// Se um ID foi passado, busca o cliente correto pelo ID
+	if (clientId !== null) {
+		const client = clients.find(c => c.id === clientId);
+		if (!client) {
+			alert("Cliente não encontrado!");
+			return;
+		}
+		editingIndex = clients.findIndex(c => c.id === clientId);
+
+		// Preenche os campos do formulário com os dados do cliente
 		Object.keys(client).forEach(key => {
 			const input = document.getElementById(key);
 			if (input) input.value = client[key];
 		});
 	} else {
+		// Se não há ID, limpa o formulário para novo cadastro
+		editingIndex = null;
 		form.reset();
 	}
+
+	// Exibe o modal
 	document.getElementById("modal").style.display = "flex";
 }
 
@@ -171,14 +182,25 @@ form.addEventListener("submit", async function(e) {
 
 
 // Deleta um cliente
-async function deleteClient(index) {
-	if (confirm("Tem certeza que deseja excluir? A exclusão será permanente!")) {
-		try {
-			await fetch(`${API_URL}/${clients[index].id}`, { method: 'DELETE' });
-			loadClients();
-		} catch (error) {
-			console.error("Erro ao excluir o cliente:", error);
+async function deleteClient(clientId) {
+	if (!confirm("Tem certeza que deseja excluir? A exclusão será permanente!")) return;
+
+	try {
+		const response = await fetch(`${API_URL}/${clientId}`, { method: 'DELETE' });
+
+		if (!response.ok) {
+			throw new Error(`Erro na API: ${response.status} - ${response.statusText}`);
 		}
+
+		// Atualiza a lista removendo o cliente excluído
+		clients = clients.filter(client => client.id !== clientId);
+
+		// Recarrega a tabela
+		renderClients(clients);
+		alert("Cliente excluído com sucesso!");
+	} catch (error) {
+		console.error("Erro ao excluir o cliente:", error);
+		alert("Erro ao excluir cliente. Verifique o console.");
 	}
 }
 
