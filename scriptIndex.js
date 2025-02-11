@@ -1,8 +1,8 @@
 const form = document.querySelector("form");
 
 const users = [
-	{ username: "Gui", password: "Marx" },
-	{ username: "Lucas", password: "Conti" }
+	{ username: "Gui", password: "Marx", nome: "Guilherme Marques"},
+  { username: "Tayna", password: "060623", nome: "Tayna Ortiz"},
 ];
 
 form.addEventListener("submit", (e) => {
