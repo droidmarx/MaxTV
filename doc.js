@@ -77,6 +77,10 @@ async function renderClients(filteredClients) {
                         <p><strong>Painel:</strong> 
                             ${painelEncontrado ? `<a href="${painelEncontrado.link}" target="_blank">${painelEncontrado.nome}</a>` : "Painel não encontrado"}
                         </p>
+                        
+                        
+                        
+                        
                         <p><strong>MAC:</strong> ${client.mac}</p>
                         <p><strong>Observações:</strong> ${client.observacoes}</p>
                         <div class="actions">
@@ -270,8 +274,6 @@ async function saveClient() {
     }
 }
 
-
-// Função de Renovação corrigida
 async function renewClient(clientId) {
 	// Encontra o cliente correto pelo ID
 	const client = clients.find(c => c.id === clientId);
@@ -279,22 +281,31 @@ async function renewClient(clientId) {
 		alert("Cliente não encontrado!");
 		return;
 	}
-
-	let daysToAdd = prompt("Quantos dias deseja adicionar à renovação?", "30");
-	daysToAdd = parseInt(daysToAdd);
-
-	if (isNaN(daysToAdd) || daysToAdd <= 0) {
-		alert("Por favor, insira um número válido de dias.");
+	
+	// Solicita a quantidade de meses para renovação
+	let monthsToAdd = prompt("Quantos meses deseja adicionar à renovação?", "1");
+	monthsToAdd = parseInt(monthsToAdd);
+	
+	if (isNaN(monthsToAdd) || monthsToAdd <= 0) {
+		alert("Por favor, insira um número válido de meses.");
 		return;
 	}
-
+	
 	// Clona o objeto para evitar alterações diretas no array
 	let updatedClient = { ...client };
-
+	
+	// Obtém a data de vencimento atual e adiciona os meses
 	let currentDate = new Date(updatedClient.vencimento);
-	currentDate.setDate(currentDate.getDate() + daysToAdd);
+	let originalDay = currentDate.getDate();
+	currentDate.setMonth(currentDate.getMonth() + monthsToAdd);
+	
+	// Correção para meses que não possuem o mesmo dia (exemplo: 31 de janeiro → fevereiro)
+	if (currentDate.getDate() !== originalDay) {
+		currentDate.setDate(0); // Define para o último dia do mês anterior (mês correto)
+	}
+	
 	updatedClient.vencimento = currentDate.toISOString().split("T")[0];
-
+	
 	try {
 		// Atualiza no banco de dados
 		await fetch(`${API_URL}/${updatedClient.id}`, {
@@ -302,15 +313,15 @@ async function renewClient(clientId) {
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(updatedClient)
 		});
-
+		
 		// Atualiza a lista após a renovação
 		await loadClients();
-
+		
 		const formattedDate = formatDate(updatedClient.vencimento);
-
+		
 		// Mensagem formatada para WhatsApp
 		const renewalMessage = `Olá ${updatedClient.cliente}!\n\n✅ Seu plano foi renovado com sucesso!\n\n📅 *Próximo vencimento: ${formattedDate}.*`;
-
+		
 		// Abre o link do WhatsApp
 		const whatsappURL = `https://wa.me/55${updatedClient.whats}?text=${encodeURIComponent(renewalMessage)}`;
 		window.open(whatsappURL, "_blank");
@@ -319,7 +330,6 @@ async function renewClient(clientId) {
 		alert("Ocorreu um erro ao renovar o cliente. Tente novamente.");
 	}
 }
-
 const themeToggle = document.getElementById("theme-toggle");
 const body = document.body;
 
@@ -522,7 +532,13 @@ if (loggedInUser) {
 	
 	const welcomeMessage = document.querySelector("#welcome-message");
 	if (welcomeMessage) {
-		welcomeMessage.textContent = `Bem-vindo, ${loggedInUser.username} !`;
+		const now = new Date();
+		const formattedDate = now.toLocaleDateString("pt-BR");
+		const formattedTime = now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+		
+		// Criando as spans corretamente
+		welcomeMessage.innerHTML = `Olá <span class="user-name">${loggedInUser.nome}</span><br>
+			<span class="date-time">${formattedDate} - ${formattedTime}</span>`;
 	}
 	
 } else {
