@@ -1,46 +1,115 @@
- * {
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+:root {
+  --primary-color: #CC0000;
+  --secondary-color: #A70000;
+  --background-color: #000000; /* Container agora é preto */
+  --text-color: #ffffff;
+  --input-bg-color: rgba(179, 52, 52, 0.5);
+  --input-border-color: #CCCCCC;
+  --highlight-color: indianred;
+  --shadow-color: rgba(0, 0, 0, 0.8);
 }
 
 ::-webkit-scrollbar {
   display: none;
 }
 
-
 body {
   font-family: sans-serif;
+  background: linear-gradient(-45deg, #8B0000, #3D3434, #DD1B1B, #000000);
+  background-size: 600% 700%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: filter 0.6s ease;
+  animation: gradientAnimation 9s infinite alternate ease-in-out;
+}
+
+/* Animação do gradiente */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.container {
   display: flex;
   flex-direction: column;
-  max-width: 300px;
-  min-width: 300px;
-  margin: 5rem auto;
+  max-width: 320px;
   padding: 20px;
-  background-color: #FFFFFF83;
+  background-color: var(--background-color); /* Preto */
   border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
-  animation: 0.5s ease;
-  animation-name: slideout;
-  align-items: center;
+  box-shadow: 0px 0px 20px var(--shadow-color);
+  animation: fadeIn 1s ease-in-out;
 }
 
-h2 {
-  text-decoration: none;
+h1 {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 70px;
+  color: var(--text-color);
   text-align: center;
-  margin:1rem;
-  animation: 0.7s ease;
-  animation-name: slideout;
+  text-shadow: 2px 2px 10px var(--shadow-color);
+  margin-bottom: 20px;
 }
 
-@keyframes slideout {
-  1% {
-    scale: 9;
-  }
+.troll {
+  display: flex;
+  justify-content: center;
+}
 
-  100% {
-    scale: 1;
+.troll img {
+  width: 200px;
+  height: 200px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.scale {
+  animation: scaleAnimation 1.2s ease-in-out;
+}
+
+@keyframes scaleAnimation {
+  0% {
+    transform: scale(1);
   }
+  35% {
+    transform: scale(0);
+  }
+  65% {
+    transform: scale(4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.logo{
+	position: relative;
+	left: 70px;
+}
+
+p {
+  margin-top: 5px;
+  color: var(--highlight-color);
+  text-align: center;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out; /* Transição para suavizar */
+}
+
+#myParagraph {
+  opacity: 0;
 }
 
 form {
@@ -48,82 +117,81 @@ form {
   flex-direction: column;
 }
 
-label {
-  margin: 5px;
-  font-weight: bold;
-}
-
-.container{
-  width: 100%
-}
-
 input[type="text"],
 input[type="password"] {
-  background: #FFF;
-  color: #000;
-  padding: 10px;
+  background: var(--input-bg-color);
+  color: var(--text-color);
+  padding: 12px;
   border-radius: 5px;
-  border: 1px solid #000000;
+  border: 1px solid var(--input-border-color);
   margin-bottom: 10px;
   text-align: center;
-  outline: transparent;
+  outline: none;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.3s;
 }
 
-
-
-input[type="text"].blinking,
-input[type="password"].blinking {
-  animation: blink 2s linear infinite;
-  caret-color: grey;
-  color:transparent;
+input:focus {
+  border: 2px solid var(--primary-color);
 }
-
-
-
-@keyframes blink {
-  0% {
-    border-color: #FFFFFF;
-  }
-  50% {
-    border-color: #0077CC;
-    color: #0077CC;
-  }
-  100% {
-    border-color: #FFFFFF;
-  }
-}
-
 
 button[type="submit"] {
-  padding: 10px;
+  padding: 12px;
   border-radius: 5px;
   border: none;
-  background-color: #0077cc;
-  color: #fff;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  color: var(--text-color);
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s;
 }
 
-[type="submit"]:hover {
-  background-color: #42445A;
+button[type="submit"]:hover {
+  background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+  transform: scale(1.05);
 }
 
+/* Efeito de Blur ao autenticar */
 .blur {
   filter: blur(10px);
-  transition: filter 0.6s ease-in-out;
-  animation-duration: 3s;
-  animation-name: slidein;
+  transition: filter 0.6s ease;
 }
 
-@keyframes slidein {
-  1% {
-    scale: 1;
-    filter: blur(2px);
-  }
+/* Fade in ao carregar */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: scale(8); }
+  50% { opacity: 1; transform: scale(0.5); }
+  70% { opacity: 1; transform: scale(2); }
+  100% { opacity: 1; transform: scale(1); }
+}
 
-  100% {
-    scale: 50;
-    filter: blur(10px);
+h1 {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 70px;
+  color: #ffffff;
+  text-align: center;
+  text-shadow: 0px 0px 10px rgba(0, 0, 0, 1);
+  border-right: 4px solid #ffffff; /* Efeito do cursor */
+  white-space: nowrap; 
+  overflow: hidden;
+  width: 0; /* Começa oculto */
+  animation: typing 3s steps(10, end) forwards, blink 0.7s infinite;
+}
+
+/* Efeito da digitação */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 200px; /* Ajuste conforme o tamanho do texto */
+  }
+}
+
+/* Animação do cursor piscando */
+@keyframes blink {
+  50% {
+    border-color: transparent;
   }
 }

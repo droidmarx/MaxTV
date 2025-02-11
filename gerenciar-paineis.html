@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Painéis</title>
+    <style>
+        /* Estilo do modal */
+        .modalPainel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+        .closePainel {
+            cursor: pointer;
+            color: red;
+            font-weight: bold;
+        }
+        .painelItem {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .painelItem button {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Lista de Painéis -->
+    <h2>Lista de Painéis</h2>
+    <div id="listaPaineis"></div>
+
+    <!-- Botão para abrir o modal -->
+    <button id="abrirModal">Gerenciar Painéis</button>
+
+    <!-- Modal -->
+    <div id="modalPainel" class="modalPainel">
+        <div class="modal-content">
+            <span class="closePainel">&times;</span>
+            <h2>Gerenciar Painéis</h2>
+
+            <h3>Editar Painel</h3>
+            <select id="painelEditar"></select>
+            <input type="text" id="novoNome" placeholder="Novo Nome">
+            <input type="text" id="novoLink" placeholder="Novo Link">
+            <button id="salvarEdicao">Salvar</button>
+
+            <hr>
+
+            <h3>Criar Novo Painel</h3>
+            <input type="text" id="novoPainelNome" placeholder="Nome do Novo Painel">
+            <input type="text" id="novoPainelLink" placeholder="Link do Novo Painel">
+            <button id="criarPainel">Criar</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://66d39f5c184dce1713d09736.mockapi.io/Api/v1/paineis";
+        const modalPainel = document.getElementById("modalPainel");
+        const abrirModalBtn = document.getElementById("abrirModal");
+        const fecharModal = document.querySelector(".closePainel");
+        const listaPaineis = document.getElementById("listaPaineis");
+        const painelEditar = document.getElementById("painelEditar");
+        const novoNomeInput = document.getElementById("novoNome");
+        const novoLinkInput = document.getElementById("novoLink");
+        const salvarEdicaoBtn = document.getElementById("salvarEdicao");
+        const novoPainelNome = document.getElementById("novoPainelNome");
+        const novoPainelLink = document.getElementById("novoPainelLink");
+        const criarPainelBtn = document.getElementById("criarPainel");
+
+        // Carregar painéis do MockAPI
+        async function carregarPaineis() {
+            try {
+                const response = await fetch(API_URL);
+                const paineis = await response.json();
+
+                listaPaineis.innerHTML = "";
+                painelEditar.innerHTML = "";
+
+                paineis.forEach(painel => {
+                    // Criando âncora (link)
+                    const div = document.createElement("div");
+                    div.className = "painelItem";
+
+                    const a = document.createElement("a");
+                    a.href = painel.link;
+                    a.textContent = painel.nome;
+                    a.target = "_blank";
+
+                    // Botão de excluir
+                    const btnExcluir = document.createElement("button");
+                    btnExcluir.textContent = "Excluir";
+                    btnExcluir.onclick = () => excluirPainel(painel.id);
+
+                    div.appendChild(a);
+                    div.appendChild(btnExcluir);
+                    listaPaineis.appendChild(div);
+
+                    // Adicionando ao select de edição
+                    const optionEdit = document.createElement("option");
+                    optionEdit.value = painel.id;
+                    optionEdit.textContent = painel.nome;
+                    painelEditar.appendChild(optionEdit);
+                });
+            } catch (error) {
+                console.error("Erro ao carregar os painéis:", error);
+            }
+        }
+
+        // Abrir modal e carregar painéis
+        abrirModalBtn.addEventListener("click", async () => {
+            await carregarPaineis();
+            modalPainel.style.display = "flex";
+        });
+
+        // Fechar modal
+        fecharModal.addEventListener("click", () => {
+            modalPainel.style.display = "none";
+        });
+
+        window.addEventListener("click", (e) => {
+            if (e.target === modalPainel) {
+                modalPainel.style.display = "none";
+            }
+        });
+
+        // Atualizar nome e link do painel no MockAPI
+        salvarEdicaoBtn.addEventListener("click", async () => {
+            const painelSelecionadoId = painelEditar.value;
+            const novoNome = novoNomeInput.value.trim();
+            const novoLink = novoLinkInput.value.trim();
+
+            if (painelSelecionadoId && novoNome && novoLink) {
+                try {
+                    await fetch(`${API_URL}/${painelSelecionadoId}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ nome: novoNome, link: novoLink })
+                    });
+
+                    alert("Painel atualizado com sucesso!");
+                    modalPainel.style.display = "none";
+                    novoNomeInput.value = "";
+                    novoLinkInput.value = "";
+                    carregarPaineis(); // Atualiza a lista
+                } catch (error) {
+                    console.error("Erro ao atualizar o painel:", error);
+                }
+            } else {
+                alert("Preencha todos os campos.");
+            }
+        });
+
+        // Criar novo painel no MockAPI
+        criarPainelBtn.addEventListener("click", async () => {
+            const nomeNovoPainel = novoPainelNome.value.trim();
+            const linkNovoPainel = novoPainelLink.value.trim();
+
+            if (nomeNovoPainel && linkNovoPainel) {
+                try {
+                    await fetch(API_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ nome: nomeNovoPainel, link: linkNovoPainel })
+                    });
+
+                    alert("Novo painel criado com sucesso!");
+                    modalPainel.style.display = "none";
+                    novoPainelNome.value = "";
+                    novoPainelLink.value = "";
+                    carregarPaineis(); // Atualiza a lista
+                } catch (error) {
+                    console.error("Erro ao criar o painel:", error);
+                }
+            } else {
+                alert("Preencha todos os campos.");
+            }
+        });
+
+        // Excluir painel do MockAPI
+        async function excluirPainel(id) {
+            if (confirm("Tem certeza que deseja excluir este painel?")) {
+                try {
+                    await fetch(`${API_URL}/${id}`, {
+                        method: "DELETE",
+                    });
+
+                    alert("Painel excluído com sucesso!");
+                    carregarPaineis(); // Atualiza a lista
+                } catch (error) {
+                    console.error("Erro ao excluir o painel:", error);
+                }
+            }
+        }
+
+        // Carregar os painéis ao abrir a página
+        carregarPaineis();
+    </script>
+
+</body>
+</html>
