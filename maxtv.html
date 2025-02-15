@@ -10,11 +10,14 @@
 <body>
 
     <!-- Botão de engrenagem -->
-    <div class="nav">
-    		<span id="welcome-message"></span>
+<div class="nav">
+    <span id="welcome-message">
+        <span class="user-name"></span>
+        <span class="date-time"></span>
+    </span>
 
-    	    <button id="settings-toggle">⚙️</button>
-    </div>
+    <button id="settings-toggle">⚙️</button>
+</div>
 
     <!-- Menu lateral -->
 <div id="settings-menu" class="settings-menu">
@@ -28,6 +31,9 @@
 	
 <!-- Botão para Gerenciar Painéis -->
 <button onclick="openPanelManager()">🛠️ Gerenciar Painéis</button>
+
+<!-- Botão para abrir a div -->
+<button id="faturamentoBtn">🤑 Faturamento</button>
 	<button onclick="acao3()">Ação 3</button>
 	<button onclick="handleLogout()" id="logoutBtn">Logout</button>
 </div>
@@ -41,6 +47,37 @@
 
         <button onclick="openModal()" data-aos="fade-up">➕ Adicionar Cliente</button>
         
+        
+<!-- Overlay para exibir o totalsContainer -->
+<div style="display: none" id="overlay">
+	<div id="totalsContainer">
+		<label for="monthSelect">Mês:</label>
+		<select id="monthSelect">
+			
+			<option value="1">Janeiro</option>
+			<option value="2">Fevereiro</option>
+			<option value="3">Março</option>
+			<option value="4">Abril</option>
+			<option value="5">Maio</option>
+			<option value="6">Junho</option>
+			<option value="7">Julho</option>
+			<option value="8">Agosto</option>
+			<option value="9">Setembro</option>
+			<option value="10">Outubro</option>
+			<option value="11">Novembro</option>
+			<option value="12">Dezembro</option>
+		</select>
+		
+		<label for="yearSelect">Ano:</label>
+		<select id="yearSelect"></select>
+		
+		
+		<p>Voce receberá de <span id="totalClients">0</span> clientes</p>
+		<p>R$: <span id="totalValue">0.00</span></p>
+		
+		<button id="closeBtn">Fechar</button>
+	</div>
+</div>       
         <div class="table-wrapper" data-aos="fade-up">
             <table>
                 <thead>
@@ -53,7 +90,7 @@
                 <tbody id="clientTable"></tbody>
             </table>
         </div>
-    </div>
+    
 
 
 <!-- Modal de Gerenciamento de Painéis -->
