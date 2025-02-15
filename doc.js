@@ -15,14 +15,23 @@ let openDetail = null; // Adicionando o controle de detalhe aberto
 
 // Carrega os clientes da API
 async function loadClients() {
-	try {
-		const response = await fetch(API_URL);
-		clients = await response.json();
-		clients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento)); // Ordena pelo vencimento mais próximo
-		renderClients(clients);
-	} catch (error) {
-		console.error("Erro ao carregar os clientes:", error);
-	}
+    try {
+        const response = await fetch(API_URL);
+        clients = await response.json();
+        clients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+        renderClients(clients);
+        renderSummary(); // Atualiza o resumo
+    } catch (error) {
+        console.error("Erro ao carregar os clientes:", error);
+    }
+}
+
+async function renderClients(filteredClients) {
+    clientTable.innerHTML = "";
+    filteredClients.forEach(client => {
+        // Renderização da tabela...
+    });
+    renderSummary(); // Atualiza o resumo após renderizar os clientes
 }
 
 
@@ -546,8 +555,56 @@ if (loggedInUser) {
 	window.location.href = "index.html";
 }
 
-// Função de Logout
-function handleLogout() {
-	sessionStorage.removeItem("loggedInUser"); // Remove o usuário da sessão
-	window.location.href = "index.html";
+
+function renderSummary() {
+    const summaryContainer = document.getElementById("summary");
+
+    if (!summaryContainer) {
+        const newSummaryDiv = document.createElement("div");
+        newSummaryDiv.id = "summary";
+        newSummaryDiv.style.padding = "10px";
+        newSummaryDiv.style.margin = "10px 0";
+        newSummaryDiv.style.border = "1px solid #ccc";
+        newSummaryDiv.style.borderRadius = "5px";
+        newSummaryDiv.style.backgroundColor = "#f9f9f9";
+        newSummaryDiv.style.textAlign = "center";
+        newSummaryDiv.style.fontWeight = "bold";
+
+        document.body.insertBefore(newSummaryDiv, clientTable);
+    }
+
+    const totalClients = clients.length;
+    const totalValue = clients.reduce((sum, client) => sum + parseFloat(client.valor || 0), 0).toFixed(2);
+
+    document.getElementById("summary").innerHTML = `
+        📊 Total de Clientes: ${totalClients} | 💰 Valor Total: R$ ${totalValue}
+    `;
 }
+
+
+
+
+
+
+function updateTotals() {
+    const totalClients = clients.length;
+    const totalValue = clients.reduce((sum, client) => sum + parseFloat(client.valor || 0), 0).toFixed(2);
+
+    document.getElementById("totalClients").textContent = totalClients;
+    document.getElementById("totalValue").textContent = totalValue;
+}
+
+// Chame a função após carregar os clientes
+async function loadClients() {
+    try {
+        const response = await fetch(API_URL);
+        clients = await response.json();
+        clients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+        renderClients(clients);
+        updateTotals(); // Atualiza os totais após carregar os clientes
+    } catch (error) {
+        console.error("Erro ao carregar os clientes:", error);
+    }
+}
+
+function populateYea
