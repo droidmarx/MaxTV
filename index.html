@@ -1,50 +1,44 @@
+<!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	
-            <link rel="icon" href="https://img.icons8.com/?size=100&id=bg5rTUJ9NHRg&format=png&color=000000" type="image/png">
-
-
-	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="styleIndex.css">
-	
-	<title>MaxTV+</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="icon" href="https://img.icons8.com/?size=96&id=80474&format=png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styleIndex.css">
+    
+    <title>MaxTV+</title>
 </head>
-
 <body>
-	
-	<audio style="display: none" src="/audio/crystal_sound_crash.mp3" controls></audio>
-	
-	<audio id="wou" style="display: none" src="/audio/cash_banooca_woah.mp3" controls></audio>
-	
-	
-	<div class="box">
-		<div class="logo">
-			<h1>MaxTv+</h1>
-		</div>
-		
-		<main class="container">
-			<div class="troll">
-				<img src="/audio/pngwing.com.png" alt="" width="240px" height="240px">
-			</div>
-			<form>
-				
-				<input type="text" placeholder="Usuário" id="username" name="username" required />
-				
-				<input type="password" placeholder="Senha" id="password" name="password" required />
-				
-				<button type="submit" id="login-btn">Login</button>
-				
-				<p id="myParagraph" style="opacity: 0">Senha ou usuário incorreto!</p>
-				
-			</form>
-		</main>
-	</div>
-	
-	<script src="scriptIndex.js"></script>
-</body>
 
+    <div class="container">
+        <h1 class="logo">MaxTV+</h1>
+
+        <form id="login-form">
+            <div class="input-group">
+                <input type="text" id="username" name="username" placeholder="Usuário" required>
+            </div>
+
+           <div class="input-group">
+    <input type="password" id="password" name="password" placeholder="Senha" required>
+    
+    <span class="toggle-password">
+        <img src="https://img.icons8.com/ios-glyphs/30/ffffff/visible.png" alt="Mostrar senha" id="eye-icon">
+    </span>
+
+</div>
+
+            <button type="submit" id="login-btn">Entrar</button>
+
+            <p class="error-message">Usuário ou senha incorretos!</p>
+        </form>
+    </div>
+
+    <audio id="success-audio" src="/audio/crystal_sound_crash.mp3"></audio>
+    <audio id="error-audio" src="/audio/cash_banooca_woah.mp3"></audio>
+
+    <script src="scriptIndex.js"></script>
+</body>
 </html>
