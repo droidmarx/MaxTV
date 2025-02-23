@@ -366,11 +366,10 @@ select {
     padding: 0px;
     background: #696969;
     border: 1px solid #ddd;
-    transition: 0.5 ease;
+    transition: 0.5s ease;
 }
-
-.details p{
-	padding: 8px;
+.details p {
+    padding: 8px;
 }
 
 .due-alert {
