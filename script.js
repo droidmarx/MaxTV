@@ -602,3 +602,24 @@ async function loadClients() {
         console.error("Erro ao carregar os clientes:", error);
     }
 }
+
+    // Exibir a div ao clicar no botão "Faturamento"
+    document.getElementById("faturamentoBtn").addEventListener("click", function() {
+    	document.getElementById("overlay").style.display = "flex";
+    });
+    
+    // Fechar a div ao clicar no botão "Fechar"
+    document.getElementById("closeBtn").addEventListener("click", function() {
+    	document.getElementById("overlay").style.display = "none";
+    });
+
+
+
+
+// Função de Logout
+function handleLogout() {
+	sessionStorage.removeItem("loggedInUser"); // Remove o usuário da sessão
+	window.location.href = "index.html";
+}
+
+
