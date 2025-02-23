@@ -108,19 +108,21 @@ async function renderClients(filteredClients) {
 
 
 // Alterna a visibilidade dos detalhes (apenas um aberto por vez)
-// Alterna a visibilidade dos detalhes (apenas um aberto por vez)
 function toggleDetails(index) {
 	const detailsRow = document.getElementById(`details-${index}`);
 	
-	// Fecha o detalhe anterior, se houver
 	if (openDetail !== null && openDetail !== index) {
 		document.getElementById(`details-${openDetail}`).classList.add("hidden");
 	}
 	
-	// Alterna a visibilidade do novo detalhe
-	detailsRow.classList.toggle("hidden");
+	if (detailsRow.classList.contains("hidden")) {
+		detailsRow.classList.remove("hidden");
+		detailsRow.classList.add("modal-content"); // Aplica estilo de modal
+	} else {
+		detailsRow.classList.add("hidden");
+		detailsRow.classList.remove("modal-content"); // Remove estilo ao fechar
+	}
 	
-	// Atualiza o detalhe aberto
 	openDetail = detailsRow.classList.contains("hidden") ? null : index;
 }
 
@@ -597,6 +599,4 @@ function updateTotals() {
 // Chame a função após carregar os clientes
 async function loadClients() {
     try {
-        const response = await fetch(API_URL);
-        clients = await response.json();
-        c
+        const response = await
