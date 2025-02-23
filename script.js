@@ -66,12 +66,12 @@ async function renderClients(filteredClients) {
         // Ícone conforme status do vencimento
         let statusIcon = diffDays < 0 ? "❌" : diffDays <= 5 ? "💵" : "ℹ️";
 
-        const formattedDate = formatDate(client.vencimento);
-        const dueMessage = `Olá ${client.cliente}, tudo bem? 😊\n\n🚨 Para evitar qualquer interrupção no seu acesso, lembramos que seu plano vence em ${formattedDate} às 23:59.\n\n📅 Faça o pagamento de R$${client.valor} via Pix para o número 11915370708.\n\n💳 Após o pagamento, envie o comprovante e continue aproveitando sem preocupações!\n\nAgradecemos pela confiança! 💙`;
+		const formattedDate = formatDate(client.vencimento);
+		const dueMessage = `Olá ${client.cliente}, tudo bem? 😊\n\n🚨 Para evitar qualquer interrupção no seu acesso, lembramos que seu plano vence em ${formattedDate} às 23:59.\n\n📅 Faça o pagamento de R$${client.valor} via Pix para o número 11915370708.\n\n💳 Após o pagamento, envie o comprovante e continue aproveitando sem preocupações!\n\nAgradecemos pela confiança! 💙`;
 
-        const painelEncontrado = paineis.find(p => p.id === client.painel);
+		const painelEncontrado = paineis.find(p => p.id === client.painel);
 
-        clientTable.innerHTML += `
+		clientTable.innerHTML += `
     <tr class="${highlightClass}">
         <td>${client.id}</td> <!-- ID separado corretamente -->
         <td class="${nameClass}">${client.cliente}</td> <!-- Nome na coluna correta -->
@@ -90,6 +90,10 @@ async function renderClients(filteredClients) {
                         <p><strong>Painel:</strong> 
                             ${painelEncontrado ? `<a href="${painelEncontrado.link}" target="_blank">${painelEncontrado.nome}</a>` : "Painel não encontrado"}
                         </p>
+                        
+                        
+                        
+                        
                         <p><strong>MAC:</strong> ${client.mac}</p>
                         <p><strong>Observações:</strong> ${client.observacoes}</p>
                         <div class="actions">
@@ -103,26 +107,24 @@ async function renderClients(filteredClients) {
                     </div>
                 </td>
             </tr>`;
-    });
+	});
 }
+
 
 
 // Alterna a visibilidade dos detalhes (apenas um aberto por vez)
 function toggleDetails(index) {
 	const detailsRow = document.getElementById(`details-${index}`);
-	
+
+	// Fecha o detalhe anterior, se houver
 	if (openDetail !== null && openDetail !== index) {
 		document.getElementById(`details-${openDetail}`).classList.add("hidden");
 	}
-	
-	if (detailsRow.classList.contains("hidden")) {
-		detailsRow.classList.remove("hidden");
-		detailsRow.classList.add("modal-content"); // Aplica estilo de modal
-	} else {
-		detailsRow.classList.add("hidden");
-		detailsRow.classList.remove("modal-content"); // Remove estilo ao fechar
-	}
-	
+
+	// Alterna a visibilidade do novo detalhe
+	detailsRow.classList.toggle("hidden");
+
+	// Atualiza o detalhe aberto
 	openDetail = detailsRow.classList.contains("hidden") ? null : index;
 }
 
@@ -599,4 +601,6 @@ function updateTotals() {
 // Chame a função após carregar os clientes
 async function loadClients() {
     try {
-        const response = await
+        const response = await fetch(API_URL);
+        clients = await response.json();
+    
