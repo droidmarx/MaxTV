@@ -8,21 +8,21 @@
 
 :root {
     --primary-color: #D90429;
-    --secondary-color: #9b0000;
-    --background-color: #1a1a1a;
+    --secondary-color: #9B0000;
+    --background-color: #1A1A1A;
     --text-color: #ffffff;
     --input-bg: rgba(255, 255, 255, 0.1);
     --error-color: #ff4c4c;
 }
 
 body {
-    background: linear-gradient(135deg, #D90429, #9b0000, #1a1a1a);
-    background-size: 300% 300%;
+    background: linear-gradient(135deg, #D90429, #818181, #1a1a1a);
+    background-size: 1000% 1000%;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: gradientMove 6s infinite alternate;
+    animation: gradientMove 2s infinite alternate;
 }
 
 /* Animação do fundo */
@@ -43,15 +43,15 @@ body {
 }
 
 .container:hover {
-    transform: scale(1.05);
+    transform: scale(0.97);
 }
 
 /* Logo animado */
 .logo {
     font-size: 50px;
     color: var(--text-color);
-    text-shadow: 2px 2px 15px rgba(255, 0, 0, 0.6);
-    animation: fadeIn 1s ease-in-out;
+    text-shadow: 4px 4px 15px rgba(255, 0, 0, 0.6);
+    animation: fadeIn 2s ease-in-out;
 }
 
 /* Inputs */
@@ -62,18 +62,19 @@ body {
 input {
     width: 100%;
     padding: 12px;
-    font-size: 18px;
+    font-size: 16px;
     background: var(--input-bg);
     border: none;
     border-radius: 6px;
     color: var(--text-color);
     text-align: center;
-    font-family: 'Arial', sans-serif; /* Fonte padrão para o texto digitado */
+    font-family: 'Arial', sans-serif;
     transition: 0.3s;
 }
 
-/* Muda a fonte do placeholder para Bebas Neue */
 input::placeholder {
+    padding: 12px;
+    font-size: 18px;
     font-family: 'Bebas Neue', sans-serif;
     text-align: center;
 }
@@ -83,6 +84,7 @@ input:focus {
     font-family: 'Arial', sans-serif;
     border: 2px solid var(--primary-color);
     outline: none;
+    scale: 1.04;
 }
 
 /* Coloca os placeholders no centro */
@@ -131,7 +133,7 @@ button:hover {
 
 .input-group input {
     width: 100%;
-    padding-right: 15px; /* Espaço para o ícone */
+    padding-right: 10px; /* Espaço para o ícone */
 }
 
 .toggle-password {
@@ -142,10 +144,20 @@ button:hover {
 }
 
 .toggle-password img {
-    width: 25px;
+    width: 30px;
     opacity: 0.6;
 }
 
 .toggle-password img:hover {
     opacity: 1;
+}
+
+.login-background {
+    position: absolute;
+    top: -150px; 
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px; 
+    opacity: 0.5; 
+    z-index: -1;
 }
