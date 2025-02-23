@@ -603,4 +603,10 @@ async function loadClients() {
     try {
         const response = await fetch(API_URL);
         clients = await response.json();
-    
+        clients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+        renderClients(clients);
+        updateTotals(); // Atualiza os totais após carregar os clientes
+    } catch (error) {
+        console.error("Erro ao carregar os clientes:", error);
+    }
+}
