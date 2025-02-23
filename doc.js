@@ -49,31 +49,35 @@ async function fetchPaineis() {
 }
 
 async function renderClients(filteredClients) {
-	const paineis = await fetchPaineis();
-	clientTable.innerHTML = "";
+    const paineis = await fetchPaineis();
+    clientTable.innerHTML = "";
 
-	filteredClients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+    filteredClients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
 
-	filteredClients.forEach(client => {
-		const now = new Date();
-		const dueDate = new Date(client.vencimento);
-		const diffDays = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
+    filteredClients.forEach(client => {
+        const now = new Date();
+        const dueDate = new Date(client.vencimento);
+        const diffDays = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
 
-		let highlightClass = diffDays <= 5 ? "expiring" : "";
-		let nameClass = diffDays <= 5 ? "highlight-name" : "";
-		let iconClass = diffDays <= 5 ? "highlight-icon" : "";
+        let highlightClass = diffDays < 0 ? "expired" : diffDays <= 5 ? "expiring" : "";
+        let nameClass = diffDays < 0 ? "expired-name" : diffDays <= 5 ? "highlight-name" : "";
+        let iconClass = diffDays < 0 ? "expired-icon" : diffDays <= 5 ? "highlight-icon" : "";
 
-		const formattedDate = formatDate(client.vencimento);
-		const dueMessage = `Olá ${client.cliente}, tudo bem? 😊\n\n🚨 Para evitar qualquer interrupção no seu acesso, lembramos que seu plano vence em ${formattedDate} às 23:59.\n\n📅 Faça o pagamento de R$${client.valor} via Pix para o número 11915370708.\n\n💳 Após o pagamento, envie o comprovante e continue aproveitando sem preocupações!\n\nAgradecemos pela confiança! 💙`;
+        // Ícone conforme status do vencimento
+        let statusIcon = diffDays < 0 ? "❌" : diffDays <= 5 ? "💵" : "ℹ️";
 
-		const painelEncontrado = paineis.find(p => p.id === client.painel);
+        const formattedDate = formatDate(client.vencimento);
+        const dueMessage = `Olá ${client.cliente}, tudo bem? 😊\n\n🚨 Para evitar qualquer interrupção no seu acesso, lembramos que seu plano vence em ${formattedDate} às 23:59.\n\n📅 Faça o pagamento de R$${client.valor} via Pix para o número 11915370708.\n\n💳 Após o pagamento, envie o comprovante e continue aproveitando sem preocupações!\n\nAgradecemos pela confiança! 💙`;
 
-		clientTable.innerHTML += `
-            <tr class="${highlightClass}">
-                <td class="${nameClass}">${client.id} - ${client.cliente}</td>
-                <td>${formattedDate}</td>
-                <td>
-                    <button class="${iconClass}" data-aos="zoom-in" onclick="toggleDetails('${client.id}')">ℹ️</button>
+        const painelEncontrado = paineis.find(p => p.id === client.painel);
+
+        clientTable.innerHTML += `
+    <tr class="${highlightClass}">
+        <td>${client.id}</td> <!-- ID separado corretamente -->
+        <td class="${nameClass}">${client.cliente}</td> <!-- Nome na coluna correta -->
+        <td>${formattedDate}</td>
+        <td>
+            <button class="${iconClass}" onclick="toggleDetails('${client.id}')">${statusIcon}</button>
                 </td>
             </tr>
             <tr id="details-${client.id}" class="hidden">
@@ -86,10 +90,6 @@ async function renderClients(filteredClients) {
                         <p><strong>Painel:</strong> 
                             ${painelEncontrado ? `<a href="${painelEncontrado.link}" target="_blank">${painelEncontrado.nome}</a>` : "Painel não encontrado"}
                         </p>
-                        
-                        
-                        
-                        
                         <p><strong>MAC:</strong> ${client.mac}</p>
                         <p><strong>Observações:</strong> ${client.observacoes}</p>
                         <div class="actions">
@@ -103,23 +103,23 @@ async function renderClients(filteredClients) {
                     </div>
                 </td>
             </tr>`;
-	});
+    });
 }
 
 
-
+// Alterna a visibilidade dos detalhes (apenas um aberto por vez)
 // Alterna a visibilidade dos detalhes (apenas um aberto por vez)
 function toggleDetails(index) {
 	const detailsRow = document.getElementById(`details-${index}`);
-
+	
 	// Fecha o detalhe anterior, se houver
 	if (openDetail !== null && openDetail !== index) {
 		document.getElementById(`details-${openDetail}`).classList.add("hidden");
 	}
-
+	
 	// Alterna a visibilidade do novo detalhe
 	detailsRow.classList.toggle("hidden");
-
+	
 	// Atualiza o detalhe aberto
 	openDetail = detailsRow.classList.contains("hidden") ? null : index;
 }
@@ -599,104 +599,4 @@ async function loadClients() {
     try {
         const response = await fetch(API_URL);
         clients = await response.json();
-        clients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
-        renderClients(clients);
-        updateTotals(); // Atualiza os totais após carregar os clientes
-    } catch (error) {
-        console.error("Erro ao carregar os clientes:", error);
-    }
-}
-
-function populateYearSelect() {
-    const yearSelect = document.getElementById("yearSelect");
-    const currentYear = new Date().getFullYear();
-    
-    for (let year = currentYear - 1; year <= currentYear + 4; year++) {
-        let option = document.createElement("option");
-        option.value = year;
-        option.textContent = year;
-        yearSelect.appendChild(option);
-    }
-    
-    yearSelect.value = currentYear; // Define o ano atual como padrão
-}
-
-document.getElementById("monthSelect").addEventListener("change", updateTotalsByMonth);
-document.getElementById("yearSelect").addEventListener("change", updateTotalsByMonth);
-
-function updateTotalsByMonth() {
-	const monthSelect = document.getElementById("monthSelect");
-	const yearSelect = document.getElementById("yearSelect");
-	const totalClientsElement = document.getElementById("totalClients");
-	const totalValueElement = document.getElementById("totalValue");
-	
-	if (!monthSelect || !yearSelect || !totalClientsElement || !totalValueElement) {
-		console.error("Elementos HTML não encontrados.");
-		return;
-	}
-	
-	const selectedMonth = parseInt(monthSelect.value);
-	const selectedYear = parseInt(yearSelect.value);
-	
-	if (isNaN(selectedMonth) || isNaN(selectedYear)) {
-		console.error("Mês ou ano selecionado inválido.");
-		return;
-	}
-	
-	if (!Array.isArray(clients)) {
-		console.error("A lista de clientes não está definida ou não é um array.");
-		return;
-	}
-	
-	const filteredClients = clients.filter(client => {
-		if (!client.vencimento) return false;
-		const vencimentoDate = new Date(client.vencimento);
-		return vencimentoDate.getMonth() + 1 === selectedMonth && vencimentoDate.getFullYear() === selectedYear;
-	});
-	
-	const totalClients = filteredClients.length;
-	const totalValue = filteredClients.reduce((sum, client) => {
-		const valor = parseFloat(client.valor);
-		return sum + (isNaN(valor) ? 0 : valor);
-	}, 0).toFixed(2);
-	
-	totalClientsElement.textContent = totalClients;
-	totalValueElement.textContent = totalValue;
-}
-
-
-
-
-// Chamar após carregar os clientes
-async function loadClients() {
-    try {
-        const response = await fetch(API_URL);
-        clients = await response.json();
-        clients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
-        renderClients(clients);
-        populateYearSelect(); // Preenche os anos disponíveis
-        updateTotalsByMonth(); // Atualiza os totais com os valores do mês atual
-    } catch (error) {
-        console.error("Erro ao carregar os clientes:", error);
-    }
-}
-
-
-    // Exibir a div ao clicar no botão "Faturamento"
-    document.getElementById("faturamentoBtn").addEventListener("click", function() {
-    	document.getElementById("overlay").style.display = "flex";
-    });
-    
-    // Fechar a div ao clicar no botão "Fechar"
-    document.getElementById("closeBtn").addEventListener("click", function() {
-    	document.getElementById("overlay").style.display = "none";
-    });
-
-
-
-
-// Função de Logout
-function handleLogout() {
-	sessionStorage.removeItem("loggedInUser"); // Remove o usuário da sessão
-	window.location.href = "index.html";
-}
+        c
