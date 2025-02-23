@@ -532,7 +532,7 @@ document.addEventListener("DOMContentLoaded", fetchPanels);
 
 
 // Verificar Login
-const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
+const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser")); 
 
 console.log("Usuário logado:", loggedInUser); // Debug
 
