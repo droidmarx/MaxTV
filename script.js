@@ -49,38 +49,39 @@ async function fetchPaineis() {
 }
 
 async function renderClients(filteredClients) {
-	const paineis = await fetchPaineis();
-	clientTable.innerHTML = "";
-	
-	filteredClients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
-	
-	filteredClients.forEach(client => {
-		const now = new Date();
-		const dueDate = new Date(client.vencimento);
-		const diffDays = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
-		
-		let highlightClass = diffDays < 0 ? "expired" : diffDays <= 5 ? "expiring" : "";
-		let nameClass = diffDays < 0 ? "expired-name" : diffDays <= 5 ? "highlight-name" : "";
-		let iconClass = diffDays < 0 ? "expired-icon" : diffDays <= 5 ? "highlight-icon" : "";
-		
-		let statusIcon = diffDays < 0 ? "❌" : diffDays <= 5 ? "💵" : "ℹ️";
-		
+    const paineis = await fetchPaineis();
+    clientTable.innerHTML = "";
+
+    filteredClients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+
+    filteredClients.forEach(client => {
+        const now = new Date();
+        const dueDate = new Date(client.vencimento);
+        const diffDays = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
+
+        let highlightClass = diffDays < 0 ? "expired" : diffDays <= 5 ? "expiring" : "";
+        let nameClass = diffDays < 0 ? "expired-name" : diffDays <= 5 ? "highlight-name" : "";
+        let iconClass = diffDays < 0 ? "expired-icon" : diffDays <= 5 ? "highlight-icon" : "";
+
+        // Ícone conforme status do vencimento
+        let statusIcon = diffDays < 0 ? "❌" : diffDays <= 5 ? "💵" : "ℹ️";
+
 		const formattedDate = formatDate(client.vencimento);
 		const dueMessage = `Olá ${client.cliente}, tudo bem? 😊\n\n🚨 Para evitar qualquer interrupção no seu acesso, lembramos que seu plano vence em ${formattedDate} às 23:59.\n\n📅 Faça o pagamento de R$${client.valor} via Pix para o número 11915370708.\n\n💳 Após o pagamento, envie o comprovante e continue aproveitando sem preocupações!\n\nAgradecemos pela confiança! 💙`;
-		
+
 		const painelEncontrado = paineis.find(p => p.id === client.painel);
-		
+
 		clientTable.innerHTML += `
-            <tr class="${highlightClass}">
-                <td>${client.id}</td>
-                <td class="${nameClass}">${client.cliente}</td>
-                <td>${formattedDate}</td>
-                <td>
-                    <button class="${iconClass}" onclick="toggleDetails('${client.id}')">${statusIcon}</button>
+    <tr class="${highlightClass}">
+        <td>${client.id}</td> <!-- ID separado corretamente -->
+        <td class="${nameClass}">${client.cliente}</td> <!-- Nome na coluna correta -->
+        <td>${formattedDate}</td>
+        <td>
+            <button class="${iconClass}" onclick="toggleDetails('${client.id}')">${statusIcon}</button>
                 </td>
             </tr>
             <tr id="details-${client.id}" class="hidden">
-                <td colspan="4">
+                <td class colspan="3">
                     <div class="details">
                         <p><strong>Tela:</strong> ${client.tela}</p>
                         <p><strong>Desconto:</strong> ${client.desconto}%</p>
@@ -89,19 +90,23 @@ async function renderClients(filteredClients) {
                         <p><strong>Painel:</strong> 
                             ${painelEncontrado ? `<a href="${painelEncontrado.link}" target="_blank">${painelEncontrado.nome}</a>` : "Painel não encontrado"}
                         </p>
+                        
+                        
+                        
+                        
                         <p><strong>MAC:</strong> ${client.mac}</p>
                         <p><strong>Observações:</strong> ${client.observacoes}</p>
                         <div class="actions">
-                            <button onclick="openEditModal('${client.id}')">📝 Editar</button>
+                            <button onclick="openModal('${client.id}')">📝 Editar</button>
                             <button onclick="deleteClient('${client.id}')">🗑️ Excluir</button>
                             <a href="https://wa.me/55${client.whats}" target="_blank">📲 WhatsApp</a>
                             <a href="#" onclick="renewClient('${client.id}')">🔄 Renovar</a>
-                            ${diffDays <= 5 ? `<a href="https://wa.me/55${client.whats}?text=${encodeURIComponent(dueMessage)}" target="_blank" class="due-alert">⚠️ VENCIMENTO </a>` : ""}
+                            ${diffDays <= 5 ? `<a href="https://wa.me/55${client.whats}?text=${encodeURIComponent(dueMessage)}" target="_blank" class="due-alert">
+                                ⚠️ VENCIMENTO </a>` : ""}
                         </div>
                     </div>
                 </td>
-            </tr>
-        `;
+            </tr>`;
 	});
 }
 
@@ -109,15 +114,18 @@ async function renderClients(filteredClients) {
 
 // Alterna a visibilidade dos detalhes (apenas um aberto por vez)
 function toggleDetails(index) {
-    const detailsRow = document.getElementById(`details-${index}`);
+	const detailsRow = document.getElementById(`details-${index}`);
 
-    if (openDetail !== null && openDetail !== index) {
-        document.getElementById(`details-${openDetail}`).classList.add("hidden");
-    }
+	// Fecha o detalhe anterior, se houver
+	if (openDetail !== null && openDetail !== index) {
+		document.getElementById(`details-${openDetail}`).classList.add("hidden");
+	}
 
-    detailsRow.classList.toggle("hidden");
+	// Alterna a visibilidade do novo detalhe
+	detailsRow.classList.toggle("hidden");
 
-    openDetail = detailsRow.classList.contains("hidden") ? null : index;
+	// Atualiza o detalhe aberto
+	openDetail = detailsRow.classList.contains("hidden") ? null : index;
 }
 
 // Formata a data para DD/MM/AAAA
@@ -594,11 +602,4 @@ function updateTotals() {
 async function loadClients() {
     try {
         const response = await fetch(API_URL);
-        clients = await response.json();
-        clients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
-        renderClients(clients);
-        updateTotals(); // Atualiza os totais após carregar os clientes
-    } catch (error) {
-        console.error("Erro ao carregar os clientes:", error);
-    }
-}
+        clients = await response.json()
