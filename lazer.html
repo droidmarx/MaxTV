@@ -1,0 +1,179 @@
+<!DOCTYPE html><html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Link</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #F4F4F4;
+      text-align: center;
+      padding: 20px;
+    }
+    .logo {
+      width: 150px;
+      margin-bottom: 20px;
+      animation: fadeInDown 1s ease-in-out;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 400px;
+      margin: auto;
+    }
+    .input-group {
+      width: 100%;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .input-group label {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: 0.3s ease-in-out;
+      font-size: 16px;
+      color: #666;
+      background: white;
+      padding: 0 5px;
+    }
+    .input-group input {
+      width: calc(100% - 20px);
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+    .input-group input:focus, .input-group input:not(:placeholder-shown) {
+      border-color: #007BFF;
+    }
+    .input-group input:focus + label, .input-group input:not(:placeholder-shown) + label {
+      top: 0;
+      font-size: 12px;
+      color: #007BFF;
+    }
+    input:focus{
+    	color:#007BFF;
+    	scale: 1.06;
+    }
+    
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    p {
+      margin-top: 20px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      max-width: 100%;
+    }
+    a {
+      color: whitesmoke;
+      background: #484A62;
+      border-radius: 6px;
+      padding: 5px 10px;
+      text-decoration: none;
+    }
+    .hidden {
+      display: none;
+    }
+    
+  </style>
+</head>
+<body>
+  <img class="logo" src="https://api.lazerplay.io/images/value-1708925777391.png" alt="Logo" data-aos="fade-down">
+  <div class="container" data-aos="fade-up">
+    <div class="input-group">
+      <input type="text" id="linkInput" placeholder=" ">
+      <label for="linkInput">M3U Encurtada</label>
+    </div>
+    <div class="input-group">
+      <input type="text" id="username" placeholder=" ">
+      <label for="username">Usuário</label>
+    </div>
+    <div class="input-group">
+      <input type="password" id="password" placeholder=" ">
+      <label for="password">Senha</label>
+    </div>
+    <div class="input-group">
+      <input type="text" id="mac" placeholder=" ">
+      <label for="mac">MAC Address</label>
+    </div>
+    <button onclick="gerarLink()">Gerar Link</button>
+    <p id="linkGerado"></p>
+    <button id="btnLazerPlay" class="hidden" onclick="redirecionarLazerPlay()">Abrir LazerPlay</button>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    AOS.init();
+    function extrairCredenciais(url) {
+      let match = url.match(/http:\/\/srvf\.me\/([^\/]+)\/([^\/]+)/);
+      if (match) {
+        return { username: match[1], password: match[2] };
+      }
+      return null;
+    }function gerarLink() {
+  let urlInput = document.getElementById("linkInput").value;
+  let username = document.getElementById("username").value;
+  let password = document.getElementById("password").value;
+  
+  if (urlInput) {
+    let credenciais = extrairCredenciais(urlInput);
+    if (credenciais) {
+      username = credenciais.username;
+      password = credenciais.password;
+      document.getElementById("username").value = username;
+      document.getElementById("password").value = password;
+    }
+  }
+  
+  let link = `http://singapore2-pass-cdn.com/get.php?username=${username}&password=${password}&type=m3u_plus&output=ts`;
+  
+  document.getElementById("linkGerado").innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
+  document.getElementById("btnLazerPlay").classList.remove("hidden");
+  
+  navigator.clipboard.writeText(link).then(() => {
+    alert("Link copiado para a área de transferência!");
+  }).catch(err => {
+    console.error("Erro ao copiar o link: ", err);
+  });
+}
+
+async function redirecionarLazerPlay() {
+  let mac = document.getElementById("mac").value;
+  let playlistUrl = "";
+  
+  try {
+    playlistUrl = await navigator.clipboard.readText();
+  } catch (err) {
+    playlistUrl = document.getElementById("linkGerado").innerText;
+  }
+  
+  let url = `https://lazerplay.io/#/upload-playlist?mac=${mac}&playlistUrl=${encodeURIComponent(playlistUrl)}`;
+  window.location.href = url;
+}
+
+  </script>
+</body>
+</html>
