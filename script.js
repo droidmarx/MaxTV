@@ -534,7 +534,7 @@ document.addEventListener("DOMContentLoaded", fetchPanels);
 
 
 // Verificar Login
-const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
+//const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
 
 console.log("Usuário logado:", loggedInUser); // Debug
 
@@ -599,4 +599,4 @@ function updateTotals() {
 // Chame a função após carregar os clientes
 async function loadClients() {
     try {
-        const response = a
+        const response =
