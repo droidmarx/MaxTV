@@ -178,22 +178,9 @@ select {
 }
 
 .expiring {
-    background-color: #A85E5E !important;
+    background-color: #F70101 !important;
     font-weight: bold;
     color: black;
-}
-
-.expired {
-    background-color: #928A8A !important; /* Vermelho claro */
-}
-
-.expired-name {
-    color: #F3F3F3 !important; /* Vermelho escuro */
-    font-weight: bold;
-}
-
-.expired-icon {
-    color: #FFFFFF !important; /* Ícone vermelho */
 }
 
 /* Responsividade */
@@ -361,17 +348,31 @@ select {
     transition: opacity 0.5 ease;
 }
 
+/* Animação de fade-in */
+@keyframes fadeIn {
+    from { scale: 2; opacity: 0; transform: translateY(400px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .details {
+	scale: 1.03;
+	position: relative;
+	z-index: 1000;
+
+	
     text-align: left;
-    padding: 0px;
+    width: 122%;
+    padding: 10px;
     background: #696969;
     border: 1px solid #ddd;
-    transition: 0.5 ease;
+        animation: fadeIn .5s ease-in-out;
+
 }
 
 .details p{
 	padding: 8px;
 }
+
 
 .due-alert {
     background: red;
@@ -395,7 +396,7 @@ select {
         transform: scale(1);
     }
     50% {
-        transform: scale(1.4);
+        transform: scale(1.5);
     }
     100% {
         transform: scale(1);
@@ -403,10 +404,10 @@ select {
 }
 
 .highlight-icon {
-    display: inline-block;
+    display: inline-block; /* Garante que a escala funcione corretamente */
     transition: transform 0.5s ease-in-out;
     animation: pulse 1.5s infinite ease-in-out;
-
+    border: 2px solid red;
 }
 
 .light-theme .highlight-name {
