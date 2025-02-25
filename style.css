@@ -355,17 +355,15 @@ select {
 }
 
 .details {
-	scale: 1.03;
+	scale: 1.02;
 	position: relative;
 	z-index: 1000;
-
-	
     text-align: left;
     width: 122%;
     padding: 10px;
     background: #696969;
     border: 1px solid #ddd;
-        animation: fadeIn .5s ease-in-out;
+    animation: fadeIn .5s ease-in-out;
 
 }
 
