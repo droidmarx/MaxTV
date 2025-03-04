@@ -597,4 +597,134 @@ function populateYearSelect() {
         yearSelect.appendChild(option);
     }
     
-    yearSelect.value = c
+    yearSelect.value = currentYear; // Define o ano atual como padrão
+}
+
+document.getElementById("monthSelect").addEventListener("change", updateTotalsByMonth);
+document.getElementById("yearSelect").addEventListener("change", updateTotalsByMonth);
+
+function updateTotalsByMonth() {
+	const monthSelect = document.getElementById("monthSelect");
+	const yearSelect = document.getElementById("yearSelect");
+	const totalClientsElement = document.getElementById("totalClients");
+	const totalValueElement = document.getElementById("totalValue");
+	
+	if (!monthSelect || !yearSelect || !totalClientsElement || !totalValueElement) {
+		console.error("Elementos HTML não encontrados.");
+		return;
+	}
+	
+	const selectedMonth = parseInt(monthSelect.value);
+	const selectedYear = parseInt(yearSelect.value);
+	
+	if (isNaN(selectedMonth) || isNaN(selectedYear)) {
+		console.error("Mês ou ano selecionado inválido.");
+		return;
+	}
+	
+	if (!Array.isArray(clients)) {
+		console.error("A lista de clientes não está definida ou não é um array.");
+		return;
+	}
+	
+	const filteredClients = clients.filter(client => {
+		if (!client.vencimento) return false;
+		const vencimentoDate = new Date(client.vencimento);
+		return vencimentoDate.getMonth() + 1 === selectedMonth && vencimentoDate.getFullYear() === selectedYear;
+	});
+	
+	const totalClients = filteredClients.length;
+	const totalValue = filteredClients.reduce((sum, client) => {
+		const valor = parseFloat(client.valor);
+		return sum + (isNaN(valor) ? 0 : valor);
+	}, 0).toFixed(2);
+	
+	totalClientsElement.textContent = totalClients;
+	totalValueElement.textContent = totalValue;
+}
+
+
+
+
+// Chamar após carregar os clientes
+async function loadClients() {
+    try {
+        const response = await fetch(API_URL);
+        clients = await response.json();
+        clients.sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+        renderClients(clients);
+        populateYearSelect(); // Preenche os anos disponíveis
+        updateTotalsByMonth(); // Atualiza os totais com os valores do mês atual
+    } catch (error) {
+        console.error("Erro ao carregar os clientes:", error);
+    }
+}
+
+
+    // Exibir a div ao clicar no botão "Faturamento"
+    document.getElementById("faturamentoBtn").addEventListener("click", function() {
+    	document.getElementById("overlay").style.display = "flex";
+    });
+    
+    // Fechar a div ao clicar no botão "Fechar"
+    document.getElementById("closeBtn").addEventListener("click", function() {
+    	document.getElementById("overlay").style.display = "none";
+    });
+
+
+
+
+// Verificar Login
+const loggedInUser = sessionStorage.getItem("loggedInUser");
+
+if (loggedInUser) {
+	try {
+		const userData = JSON.parse(loggedInUser);
+		console.log("Usuário logado:", userData); // Debug
+		
+		// Buscar os usuários no MockAPI
+		fetch("https://66d39f5c184dce1713d09736.mockapi.io/Api/v1/paineis")
+			.then(response => response.json())
+			.then(users => {
+				// Verifica se o usuário ainda existe na API
+				const validUser = users.find(user => user.username === userData.username);
+				
+				if (validUser) {
+					document.body.classList.add("blur-effect");
+					
+					const welcomeMessage = document.querySelector("#welcome-message");
+					if (welcomeMessage) {
+						const now = new Date();
+						const formattedDate = now.toLocaleDateString("pt-BR");
+						const formattedTime = now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+						
+						// Exibe a mensagem de boas-vindas
+						welcomeMessage.innerHTML = `Olá <span class="user-name">${validUser.nome}</span><br>
+                            <span class="date-time">${formattedDate} - ${formattedTime}</span>`;
+					}
+				} else {
+					throw new Error("Usuário não encontrado.");
+				}
+			})
+			.catch(error => {
+				console.error("Erro ao buscar usuário:", error);
+				alert("Erro na autenticação. Faça login novamente.");
+				sessionStorage.removeItem("loggedInUser");
+				window.location.href = "index.html";
+			});
+	} catch (error) {
+		console.error("Erro ao processar os dados do usuário:", error);
+		alert("Erro na autenticação. Faça login novamente.");
+		sessionStorage.removeItem("loggedInUser");
+		window.location.href = "index.html";
+	}
+} else {
+	alert("Você precisa estar logado.");
+	window.location.href = "index.html";
+}
+
+// Função de Logout
+function handleLogout() {
+	sessionStorage.removeItem("loggedInUser"); // Remove o usuário da sessão
+	window.location.href = "index.html";
+}
