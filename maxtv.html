@@ -135,10 +135,16 @@
             <i data-lucide="calendar-days"></i>
             <input type="date" id="vencimento" required>
         </div>
-        <div class="input-group">
-            <i data-lucide="monitor"></i>
-            <input type="text" id="tela" placeholder="Tela">
-        </div>
+<div class="input-group">
+    <i data-lucide="monitor"></i>
+    <select id="tela">
+        <option value="" disabled selected>Tela</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+    </select>
+</div>
         <div class="input-group">
             <i data-lucide="percent"></i>
             <input type="number" id="desconto" placeholder="Desconto (%)" min="0" max="100">
@@ -159,7 +165,10 @@
         </div>
         <div class="input-group">
             <i data-lucide="cpu"></i>
+        <div class="input-groupa">
             <input type="text" id="mac" placeholder="MAC">
+            <input type="text" id="key" placeholder="KEY">
+        </div>
         </div>
         <div class="input-group">
             <i data-lucide="sticky-note"></i>
