@@ -7,6 +7,7 @@
     <link rel="icon" href="https://img.icons8.com/?size=96&id=CYNJXdNSRvrJ&format=png" type="image/png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
 
@@ -122,28 +123,57 @@
 
     <!-- Modal -->
     <div id="modal" class="modal">
-        <div class="modal-content" data-aos="zoom-in">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modalTitle">Adicionar Cliente</h2>
-            <form id="clientForm">
-                <input type="text" id="cliente" placeholder="Nome do Cliente" required>
-                <input type="date" id="vencimento" required>
-                <input type="text" id="tela" placeholder="Tela">
-                <input type="number" id="desconto" placeholder="Desconto (%)" min="0" max="100">
-                <input type="number" id="valor" placeholder="Valor (R$)" step="0.01" required>
-                <input type="tel" id="whats" placeholder="WhatsApp (DDD + Número)" required>
-                
-                <select id="painel" required>
-                    <option value="">Selecione um painel</option>
-
-                </select>
-                
-                <input type="text" id="mac" placeholder="MAC">
-                <textarea id="observacoes" placeholder="Observações"></textarea>
-                <button type="submit">Salvar Cliente</button>
-            </form>
+<div class="modal-content" data-aos="zoom-in">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2 id="modalTitle">Adicionar Cliente</h2>
+    <form id="clientForm">
+        <div class="input-group">
+            <i data-lucide="user"></i>
+            <input type="text" id="cliente" placeholder="Nome do Cliente" required>
         </div>
+        <div class="input-group">
+            <i data-lucide="calendar-days"></i>
+            <input type="date" id="vencimento" required>
+        </div>
+        <div class="input-group">
+            <i data-lucide="monitor"></i>
+            <input type="text" id="tela" placeholder="Tela">
+        </div>
+        <div class="input-group">
+            <i data-lucide="percent"></i>
+            <input type="number" id="desconto" placeholder="Desconto (%)" min="0" max="100">
+        </div>
+        <div class="input-group">
+            <i data-lucide="dollar-sign"></i>
+            <input type="number" id="valor" placeholder="Valor (R$)" step="0.01" required>
+        </div>
+        <div class="input-group">
+            <i data-lucide="phone"></i>
+            <input type="tel" id="whats" placeholder="WhatsApp (DDD + Número)" required>
+        </div>
+        <div class="input-group">
+            <i data-lucide="layout"></i>
+            <select id="painel" required>
+                <option value="">Selecione um painel</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <i data-lucide="cpu"></i>
+            <input type="text" id="mac" placeholder="MAC">
+        </div>
+        <div class="input-group">
+            <i data-lucide="sticky-note"></i>
+            <textarea id="observacoes" placeholder="Observações"></textarea>
+        </div>
+        <button type="submit">
+            <i data-lucide="save"></i> Salvar Cliente
+        </button>
+    </form>
+</div>
 
+<script>
+    lucide.createIcons();
+</script>
     <script src="doc.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
