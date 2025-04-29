@@ -590,6 +590,13 @@ span {
     color: #333;
 }
 
+.input-groupa {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+}
+
 p i {
   width: 16px;
   height: 16px;
