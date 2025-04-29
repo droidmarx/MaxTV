@@ -576,3 +576,23 @@ span {
         	border-radius: 5px;
         	margin-top: 10px;
         }
+        
+        .input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.input-group i {
+    width: 20px;
+    height: 20px;
+    color: #333;
+}
+
+p i {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
