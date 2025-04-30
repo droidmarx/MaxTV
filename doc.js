@@ -83,15 +83,12 @@ async function renderClients(filteredClients) {
             <tr id="details-${client.id}" class="hidden">
                 <td colspan="3">
                     <div class="details">
-                        <p><strong>Tela:</strong> ${client.tela}</p>
-                        <p><strong>Desconto:</strong> ${client.desconto}%</p>
-                        <p><strong>Valor:</strong> R$ ${client.valor}</p>
-                        <p><strong>WhatsApp:</strong> ${client.whats}</p>
-                        <p><strong>Painel:</strong> 
-                            ${painelEncontrado ? `<a href="${painelEncontrado.link}" target="_blank">${painelEncontrado.nome}</a>` : "Painel não encontrado"}
-                        </p>
-                        <p><strong>MAC:</strong> ${client.mac}</p>
-                        <p><strong>Observações:<br></strong> <textarea>${client.observacoes}</textarea></p>
+                        <p>🖥️ <strong>Tela:</strong> ${client.tela}</p>
+<p>💸 <strong>Valor:</strong> R$ ${client.valor}</p>
+<p>🌐 <strong>Painel:</strong> ${painelEncontrado ? `<a href="${painelEncontrado.link}" target="_blank">${painelEncontrado.nome}</a>` : "Painel não encontrado"}</p>
+<p>🔗 <strong>MAC:</strong> ${client.mac}
+🔑 <strong>Key:</strong> ${client.safekey}</p>
+<p>📝 <strong>Observações:<br></strong> <textarea>${client.observacoes}</textarea></p>
                         <div class="actions">
                             <button onclick="openModal('${client.id}')">📝 Editar</button>
                             <button onclick="deleteClient('${client.id}')">🗑️ Excluir</button>
@@ -248,6 +245,7 @@ async function saveClient() {
         whats: document.getElementById("whats").value,
         painel: document.getElementById("painel").value,
         mac: document.getElementById("mac").value,
+        safekey: document.getElementById("safekey").value,
         observacoes: document.getElementById("observacoes").value,
         vencimento: document.getElementById("vencimento").value,
     };
